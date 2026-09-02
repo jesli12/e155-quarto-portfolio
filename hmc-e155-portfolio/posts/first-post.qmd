@@ -1,0 +1,16 @@
+---
+title: "Hello Quarto"
+description: "The start of my E155 journey!"
+author: "Jessica Li"
+date: "9/1/2026"
+categories:
+  - reflection
+  - labreport
+draft: false
+---
+
+This is my first blog post in my E155 portfolio! I am super excited to start this class, and it's definitely been one I've been anticipating for a while. So far, I've been able to broadly touch upon circuits and digital electronics, and I am looking forward to learning more in depth. 
+
+I hope to take away a series of projects that I can use to showcase my skills in the future, and I also hope to learn more about the field of electrical/embedded systems engineering. Beyond just the technical skills, I will also aim to practice my communication skills and technical writing, as I know that these are important transferable skillsfor any engineer to have.
+
+I also see this course as a challenge for myself in terms of time management and organization, as I know that the workload will be heavy and that project progress is often not a linear process. 

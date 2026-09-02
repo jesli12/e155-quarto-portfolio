@@ -1,7 +1,15 @@
 ---
-title: "E155 Portfolio"
+title: "Jessica's E155 Portfolio"
+image: images/JLheadshot.jpg
+about:
+    template: jolla
+    links:
+        - icon: linkedin
+          text: LinkedIn
+          href: https://www.linkedin.com/in/lijessica12/
+        - icon: github
+          text: GitHub
+          href: https://github.com/jesli12
 ---
 
-This is a Quarto website.
-
-To learn more about Quarto websites visit <https://quarto.org/docs/websites>.
+Jessica Li is a 3rd year Engineering major at [Harvey Mudd College](https://hmc.edu), and this is her E155 (Microprocessor Systems: Design & Application) portfolio. She especially enjoys project-based learning, and is excited to share her work through this website! 

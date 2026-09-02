@@ -1,0 +1,14 @@
+---
+title: "Resources"
+links:
+  - icon: linkedin
+    text: LinkedIn
+    href: https://www.linkedin.com/in/lijessica12/
+  - icon: github
+    text: GitHub
+    href: https://github.com/jesli12
+---
+
+These are some related resources to my work in E155. More will be added as I continue the course (F'26 Semester).
+
+* [E155 Course Website](https://hmc-e155.github.io/)
