@@ -1,6 +1,6 @@
 ---
-title: "Lab 2 Report"
-description: "Lab 2 Report for E155"
+title: "Lab 7 Report"
+description: "Lab 7 Report for E155"
 categories:
   - reflection
   - labreport

@@ -1,0 +1,10 @@
+---
+title: "Lab 6 Report"
+description: "Lab 6 Report for E155"
+author: "Jessica Li"
+date: "9/8/2026"
+categories:
+  - reflection
+  - labreport
+draft: false
+---
