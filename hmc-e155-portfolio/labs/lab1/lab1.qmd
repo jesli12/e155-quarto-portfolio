@@ -38,9 +38,9 @@ The design uses a total of 3 modules:
     - switch_to_display.sv [combinational logic]: contained the logic for the switch input to seven segment display output.
 
   
-The submodule counter_2_4Hz.sv 
+The submodule counter_2_4Hz.sv uses a simple counter to divide the 48 MHz clock signal down to 2.4 Hz. The maximum count threshold was calculated as follows:
 
-::: {.callout-note collapse="true"}
+::: {.callout-note collapse="false"}
 ## 2.4 Hz Counter Submodule: Calculations for Max Count Threshold
 ![Calculations for Max Count Threshold](lab1_images/maxCounterCalcs.png){#fig-maxCounerCalcs}
 :::
@@ -52,33 +52,40 @@ The code for this project can be found in this [Github repository](https://githu
 
 ### Block Diagram
 
-::: {.callout-note collapse="true"}
+::: {.callout-note collapse="false"}
 ## Block Diagram
 ![Block Diagram of the HDL design](lab1_images/lab1BlockDiagram.jpeg){#fig-block}
 ::: 
 
-The block diagram in @fig-block demonstrates the overall architecture of the design.
+The block diagram in @fig-block demonstrates the overall architecture of the design. 
 
 
 ### Schematic
 
-::: {.callout-note collapse="true"}
+::: {.callout-note collapse="false"}
 ## Schematic
 ![Schematic of the circuit.](lab1_images/lab1Schematic.jpeg){#fig-schematic}
 
-Schematic of the physical circuit.
+Schematic of the physical circuit. Note that the 7-segment display (MAN6460) is a common anode display, so the segments are active low. 
 :::
 
 @fig-schematic shows the physical layout of the design.
 Internal 100 k$\Omega$ pullup resistors were used to ensure the active low was not floating for the buttons and the 4 switch inputs.
-Each segment in the 7-segment display was connected using a 150 k$\Omega$ current-limiting resistor to ensure the [FINISH]
+Each segment in the 7-segment display was connected using a 150 $\Omega$ current-limiting resistor to ensure that it stays within recommended operating conditions. Calculations for the current-limiting resistors for the common anode 7-segment display are shown below.
 
+::: {.callout-note collapse="false"}
+## Calculations for Current-Limiting Resistors for 7-segment Display
+$$
+I_D=\frac{V_{DD}-V_{ON}}{R_S+R_D}
+$$
+
+We can assume $R_S$ (internal resistance)to be negligible. The voltage provided by the development board is $V_{DD}$ = 3.3 V, and $V_{ON}$ = 2.1 V according to the 7-segment display datasheet. $I_D = 8$ mA was chosen as it falls within the ideal range of 5-20 mA and results in a standard $R_D$ value.
+
+Solving the equation results in a resistor value of 150 $\Omega$.
+
+:::
 
 ## Results and Discussion
-
-::: {.callout-note title="Results and Discussion" }
-Did you accomplish all of the prescribed tasks? If not, what are the shortcomings? How might you address them given more time? As appropriate, how did the design perform (e.g., How fast/accurate/reliable was it?).
-:::
 
 All prescribed tasks and specifications were met. Thorough verification can be found below.
 
@@ -93,10 +100,13 @@ Below are the QuestaSim simulations.
 ## Counter Testbench QuestaSim Results
 ![Counter Testbench Tests 1a](lab1_images/counterTest1a.png){#fig-counterTBtest1a}
 
+This first waveform validates that reset and enable work as intended for the counter. The waveform shows that when reset is asserted (active low), the counter resets to 0. When enable is turned off (active high), the counter freezes at its current value. Other scenarios are tested in the following frame in the waveforms.
+
 ![Counter Testbench Tests 1b to 3b](lab1_images/counterTest1bThru3b.png){#fig-counterTBtests}
 
-Schematic of the physical circuit.
+This frame in the waveform validates that the counter is counting as expected, when it reaches the maximum count threshold, it resets to 0, toggles the LED, and starts counting again. Enable is turned off once it reaches the maximum count to demonstrate that the counter can be frozen at a non-zero value as well. Finally, reset is tested to show that the counter and LED can be set back to 0 (starting from non-zero values)
 :::
+
 
 ## 7-segment Submodule Tests: switch_to_display
 
@@ -104,7 +114,7 @@ Schematic of the physical circuit.
 ## 7-segment Display Testbench QuestaSim Results
 ![switch_to_display testbench waveforms](lab1_images/sevenSegmentTests.png){#fig-sevSegTB}
 
-Schematic of the physical circuit.
+The waveform shows that the 7-segment display is displaying the correct hexadecimal digit based on the input from the 4 switches. (Note that the 7-segment display (MAN6460) is a common anode display, so the segments are active low.)
 :::
 
 ## Top Module Tests: lab1_jl
@@ -115,28 +125,33 @@ Schematic of the physical circuit.
 
 ![Top Module Testbench Waveforms Tests 3b ](lab1_images/topMod3bBlinkerTest.png){#fig-topModTest3b}
 
-Schematic of the physical circuit.
+First, the cursor shows that the `HSOCS` is accurately generating a 48 MHz clock signal. The first cycle ends roughly at 20.029 ns, and the period for a 48 MHz signal is 20.833 ns. This shows that the top module is correctly connected to the `HSOSC` primitive.
+
+The waveform also shows that LED 1 and LED 2 are lighting up according to the given look-up table based on the input from the 4 switches.
+
+The waveform shows that the 7-segment display is displaying the correct hexadecimal digit based on the input from the 4 switches. This shows that the top module is correctly connected to the `switch_to_display` submodule. (Note that the 7-segment display (MAN6460) is a common anode display, so the segments are active low.)
+
+Finally, the waveform shows that enable and reset work as intended for the blinker LED[2]. This shows that the top module is correctly connected to the `counter_2_4Hz` submodule.
 :::
 
 ::: {.callout-note collapse="true"}
 ## Verifying 2.4 Hz Blinker LED
-![QuestaSim Waveform for a Half-cycle of Blinker LED](lab1_images/topMod2_4HzBlink.png){#fig-topModTestBlinker}
-
 ![Oscilloscope Confirmation](lab1_images/scope_4.png){#fig-oscope}
 
-Schematic of the physical circuit.
+The oscilloscope screenshot in @fig-oscope confirms that the blinker LED is toggling at the expected frequency of 2.4 Hz.
+
+![QuestaSim Waveform for a Half-cycle of Blinker LED](lab1_images/topMod2_4HzBlink.png){#fig-topModTestBlinker}
+
+This was also confirmed in the QuestaSim simulation of the top module, as shown in @fig-topModTestBlinker. The waveform shows a completed half-cycle of the blinker LED (roughly 208333333 ns), which is consistent with the expected behavior of a 2.4 Hz blinking LED.
 :::
 
 The design met all intended design objectives.
 
 ## Conclusion
 
-::: {.callout-note title="Conclusion" }
-Briefly summarize what was done and how it performed. Also note how many hours you spent working on the lab.
-:::
+As demonstrated above, the design successfully completed its functions. It was able to blink an on-board LED at 2.4 Hz, display the correct hexadecimal digit on a 7-segment display based on the input from 4 switches, and light up two other LEDs according to a given look-up table.
 
-The design successfully completed its functions.
-I spent roughly a total of 35 hours working on this lab and report.
+I spent roughly a total of 40 hours working on this lab and report.
 
 ## AI Prototype Summary
 
@@ -195,3 +210,5 @@ I spent roughly a total of 35 hours working on this lab and report.
 The code above was generated by Gemini Pro. It was used to create a simple 2 Hz LED blinker using the internal high-speed oscillator of the Lattice iCE40UP5K FPGA. On its first attempt, the code synthesized and successfully implemented a clock divider to achieve the desired blinking frequency.
 
 I was suprised by the thoroughness of the comments in the generated code despite the fact that the prompt did not explicitly request it. 
+
+Lastly, after careful review of the code, I found that the generated code revealed a minor inaccuracy in my own code. After calculating the desired toggle length, Gemini Pro's code subtracts 1 from the toggle count to ensure that the LED toggles at exactly 2 Hz. My code did not include this adjustment, which would resulted in a slightly slower blink rate (by one clock cycle per toggle). This is a minor inaccuracy as the error in the 48 MHz clock generated by the `HSOSC` is the dominant factor of error.
