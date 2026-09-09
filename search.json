@@ -7,6 +7,69 @@
     "text": "These are some related resources to my work in E155. More will be added as I continue the course (F’26 Semester).\n\nE155 Course Website"
   },
   {
+    "objectID": "posts/first-post.html",
+    "href": "posts/first-post.html",
+    "title": "Hello Quarto",
+    "section": "",
+    "text": "This is my first blog post in my E155 portfolio! I am super excited to start this class, and it’s definitely been one I’ve been anticipating for a while. So far, I’ve been able to broadly touch upon circuits and digital electronics, and I am looking forward to learning more in depth.\nI hope to take away a series of projects that I can use to showcase my skills in the future, and I also hope to learn more about the field of electrical/embedded systems engineering. Beyond just the technical skills, I will also aim to practice my communication skills and technical writing, as I know that these are important transferable skillsfor any engineer to have.\nI also see this course as a challenge for myself in terms of time management and organization, as I know that the workload will be heavy and that project progress is often not a linear process."
+  },
+  {
+    "objectID": "labs/index.html#lab-2-multiplexed-7-segment-display",
+    "href": "labs/index.html#lab-2-multiplexed-7-segment-display",
+    "title": "Labs",
+    "section": "Lab 2: Multiplexed 7-Segment Display",
+    "text": "Lab 2: Multiplexed 7-Segment Display"
+  },
+  {
+    "objectID": "labs/index.html#lab-3-keypad-scanner",
+    "href": "labs/index.html#lab-3-keypad-scanner",
+    "title": "Labs",
+    "section": "Lab 3: Keypad Scanner",
+    "text": "Lab 3: Keypad Scanner"
+  },
+  {
+    "objectID": "labs/index.html#lab-4-digital-audio",
+    "href": "labs/index.html#lab-4-digital-audio",
+    "title": "Labs",
+    "section": "Lab 4: Digital Audio",
+    "text": "Lab 4: Digital Audio"
+  },
+  {
+    "objectID": "labs/index.html#lab-5-interrupts",
+    "href": "labs/index.html#lab-5-interrupts",
+    "title": "Labs",
+    "section": "Lab 5: Interrupts",
+    "text": "Lab 5: Interrupts"
+  },
+  {
+    "objectID": "labs/index.html#lab-6-the-internet-of-things-and-serial-peripheral-interface-spi",
+    "href": "labs/index.html#lab-6-the-internet-of-things-and-serial-peripheral-interface-spi",
+    "title": "Labs",
+    "section": "Lab 6: The Internet of Things and Serial Peripheral Interface (SPI)",
+    "text": "Lab 6: The Internet of Things and Serial Peripheral Interface (SPI)"
+  },
+  {
+    "objectID": "labs/index.html#lab-7-the-advanced-encryption-standard",
+    "href": "labs/index.html#lab-7-the-advanced-encryption-standard",
+    "title": "Labs",
+    "section": "Lab 7: The Advanced Encryption Standard",
+    "text": "Lab 7: The Advanced Encryption Standard"
+  },
+  {
+    "objectID": "blog.html",
+    "href": "blog.html",
+    "title": "E155 Blog",
+    "section": "",
+    "text": "Lab 1 Complete!\n\n\nReflections on my first lab experience in E155.\n\n\n\n\n\nSep 9, 2026\n\n\nJessica Li\n\n\n\n\n\n\n\n\n\n\n\n\nHello Quarto\n\n\nThe start of my E155 journey!\n\n\n\n\n\nSep 1, 2026\n\n\nJessica Li\n\n\n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Jessica’s E155 Portfolio",
+    "section": "",
+    "text": "Jessica Li is a 3rd year Engineering major at Harvey Mudd College, and this is her E155 (Microprocessor Systems: Design & Application) portfolio. She especially enjoys project-based learning, and is excited to share her work through this website!\nOutside of engineering, Jessica still seeks out project-based learning opportunities, and enjoys exploring new crafts. She has completed 30+ crochet projects, attempted 3d minatures, and has recently started learning how to embroider and macrame."
+  },
+  {
     "objectID": "labs/lab1/lab1.html",
     "href": "labs/lab1/lab1.html",
     "title": "Lab 1: FPGA and MCU Setup and Testing",
@@ -77,66 +140,10 @@
     "text": "AI Prototype Summary\n\n\n\n\n\n\nNoteLLM Prompt\n\n\n\n\n\n“Write SystemVerilog HDL to leverage the internal high speed oscillator in the Lattice UP5K FPGA and blink an LED at 2 Hz. Take full advantage of SystemVerilog syntax, for example, using logic instead of wire and reg.”\n\n\n\n\n\n\n\n\n\nNoteAI Prototype Code\n\n\n\n\n\n// Written by Gemini Pro // Target Device: Lattice iCE40UP5K // Description: Drives an LED at 2 Hz using the internal high-speed oscillator (HSOSC)\nmodule top ( output logic led );\n  // Internal clock signal driven by the Lattice HSOSC primitive\n  logic clk_48mhz;\n\n  // Lattice iCE40 UltraPlus High-Speed Oscillator Primitive\n  // Parameters configure the output frequency:\n  // \"0b00\" = 48 MHz (Default)\n  // \"0b01\" = 24 MHz\n  // \"0b10\" = 12 MHz\n  // \"0b11\" = 6 MHz\n  HSOSC #(\n      .CLKHF_DIV(\"0b00\") \n  ) hf_osc_inst (\n      .CLKHFPU(1'b1),     // Power up the oscillator\n      .CLKHFEN(1'b1),     // Enable clock output\n      .CLKHF  (clk_48mhz) // Output clock signal\n  );\n\n  // 48 MHz clock period = ~20.83 ns\n  // To toggle an LED at 2 Hz (0.5s period), we need 24,000,000 clock cycles per toggle.\n  // $clog2(24_000_000) requires a 25-bit counter (2^25 = 33,554,432).\n  localparam int CLK_FREQ_HZ = 48_000_000;\n  localparam int TOGGLE_COUNT = (CLK_FREQ_HZ / 2) - 1;\n\n  logic [24:0] count = '0;\n\n  // Clock division logic\n  always_ff @(posedge clk_48mhz) begin\n      if (count == TOGGLE_COUNT) begin\n          count &lt;= '0;\n          led   &lt;= ~led; // Toggle LED state every 0.5s (2 Hz toggle rate)\n      end else begin\n          count &lt;= count + 1'b1;\n      end\n  end\nendmodule\n\n\n\nThe code above was generated by Gemini Pro. It was used to create a simple 2 Hz LED blinker using the internal high-speed oscillator of the Lattice iCE40UP5K FPGA. On its first attempt, the code synthesized and successfully implemented a clock divider to achieve the desired blinking frequency.\nI was suprised by the thoroughness of the comments in the generated code despite the fact that the prompt did not explicitly request it.\nLastly, after careful review of the code, I found that the generated code revealed a minor inaccuracy in my own code. After calculating the desired toggle length, Gemini Pro’s code subtracts 1 from the toggle count to ensure that the LED toggles at exactly 2 Hz. My code did not include this adjustment, which would resulted in a slightly slower blink rate (by one clock cycle per toggle). This is a minor inaccuracy as the error in the 48 MHz clock generated by the HSOSC is the dominant factor of error."
   },
   {
-    "objectID": "index.html",
-    "href": "index.html",
-    "title": "Jessica’s E155 Portfolio",
+    "objectID": "posts/second-post.html",
+    "href": "posts/second-post.html",
+    "title": "Lab 1 Complete!",
     "section": "",
-    "text": "Jessica Li is a 3rd year Engineering major at Harvey Mudd College, and this is her E155 (Microprocessor Systems: Design & Application) portfolio. She especially enjoys project-based learning, and is excited to share her work through this website!\nOutside of engineering, Jessica still seeks out project-based learning opportunities, and enjoys exploring new crafts. She has completed 30+ crochet projects, attempted 3d minatures, and has recently started learning how to embroider and macrame."
-  },
-  {
-    "objectID": "blog.html",
-    "href": "blog.html",
-    "title": "E155 Blog",
-    "section": "",
-    "text": "Hello Quarto\n\n\nThe start of my E155 journey!\n\n\n\n\n\nSep 1, 2026\n\n\nJessica Li\n\n\n\n\n\nNo matching items"
-  },
-  {
-    "objectID": "labs/index.html#lab-2-multiplexed-7-segment-display",
-    "href": "labs/index.html#lab-2-multiplexed-7-segment-display",
-    "title": "Labs",
-    "section": "Lab 2: Multiplexed 7-Segment Display",
-    "text": "Lab 2: Multiplexed 7-Segment Display"
-  },
-  {
-    "objectID": "labs/index.html#lab-3-keypad-scanner",
-    "href": "labs/index.html#lab-3-keypad-scanner",
-    "title": "Labs",
-    "section": "Lab 3: Keypad Scanner",
-    "text": "Lab 3: Keypad Scanner"
-  },
-  {
-    "objectID": "labs/index.html#lab-4-digital-audio",
-    "href": "labs/index.html#lab-4-digital-audio",
-    "title": "Labs",
-    "section": "Lab 4: Digital Audio",
-    "text": "Lab 4: Digital Audio"
-  },
-  {
-    "objectID": "labs/index.html#lab-5-interrupts",
-    "href": "labs/index.html#lab-5-interrupts",
-    "title": "Labs",
-    "section": "Lab 5: Interrupts",
-    "text": "Lab 5: Interrupts"
-  },
-  {
-    "objectID": "labs/index.html#lab-6-the-internet-of-things-and-serial-peripheral-interface-spi",
-    "href": "labs/index.html#lab-6-the-internet-of-things-and-serial-peripheral-interface-spi",
-    "title": "Labs",
-    "section": "Lab 6: The Internet of Things and Serial Peripheral Interface (SPI)",
-    "text": "Lab 6: The Internet of Things and Serial Peripheral Interface (SPI)"
-  },
-  {
-    "objectID": "labs/index.html#lab-7-the-advanced-encryption-standard",
-    "href": "labs/index.html#lab-7-the-advanced-encryption-standard",
-    "title": "Labs",
-    "section": "Lab 7: The Advanced Encryption Standard",
-    "text": "Lab 7: The Advanced Encryption Standard"
-  },
-  {
-    "objectID": "posts/first-post.html",
-    "href": "posts/first-post.html",
-    "title": "Hello Quarto",
-    "section": "",
-    "text": "This is my first blog post in my E155 portfolio! I am super excited to start this class, and it’s definitely been one I’ve been anticipating for a while. So far, I’ve been able to broadly touch upon circuits and digital electronics, and I am looking forward to learning more in depth.\nI hope to take away a series of projects that I can use to showcase my skills in the future, and I also hope to learn more about the field of electrical/embedded systems engineering. Beyond just the technical skills, I will also aim to practice my communication skills and technical writing, as I know that these are important transferable skillsfor any engineer to have.\nI also see this course as a challenge for myself in terms of time management and organization, as I know that the workload will be heavy and that project progress is often not a linear process."
+    "text": "Wow. This past week was definitely a challenge to say the least. It felt like a sprint to finish, despite the fact that I had started the lab early in the week. I am hopeful that because the first lab meant also getting back up to speed on the tools, software, and hardware, that this first lab took longer than future labs will. I feel much more confident now in my ability to use Radiant and debug projects.\nLet’s talk about thing’s I’m proud of for this week!\n\nStarted early (I finished most of the Quarto website/portfolio setup before the first class on Monday/Tuesday, and I started the lab on Wednesday.)\nFinished the Lab on time.\n\nWhile I am not proud of the large amount of time I had to spent completing this project, I am proud that I stuck with it and finished it anyway.\n\nHelped other students in lab. (Community building! I met new people. Definitely a mutually beneficial experience)\nI feel that I was able to really practice my problem solving skills and design thinking. I was able to think through the problems and create solutions.\n\nLet’s talk about some things I would like to improve on for next week! 1. Overall Time Commitment. + This will come with more practice and experience, but I would like to be able to complete the lab in a more reasonable amount of time. I did not protect my time well enough for my other classes or my own wellbeing (sleep). In summary, I want to work on efficiency, and personal boundaries to my workload balance.\n\nProcess Efficiency\n\nI need to organize my lab time to coincide with lab help, as well as avoiding the busiest hours in the lab.\nI need to be more organized in my approach to debugging, when I shouldn’t take the instructions at face-value, when I should find other ways to complete the same task, when I should move on and wait for help.\n\n\nThis lab was incredibly fun to complete, despite the consectutive late nights and long hours. I am reminded of how rewarding it is to see a project come together, and I am excited to continue on! Of course, rather expectedly, the process has also reminded me that I need to learn more than just the technical content, but also soft skills like time management, organization, and communication.\nThank you to the grutors and my classmates for all the help and companionship this week :)\nThey said this class was community-building and they did not lie."
   }
 ]
