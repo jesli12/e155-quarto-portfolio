@@ -6,3 +6,105 @@ categories:
   - labreport
 draft: false
 ---
+## Introduction
+
+In this lab, the E155 course development pcb board was assembled and tested. Once functionally validated, a design was implemented on the FPGA 
+with the following features:
+
+* A 7-segment display that shows the hexadecimal digit corresponding to a 4 bit binary number.
+
+  + The digit displayed is controlled by 4 switches on the development board, which map out the 4 bit binary number.
+
+* LED 1 and LED 2 on the development board light up according to a given look-up table, dependent on the input of the same 4 switches.
+
+* LED 3 blinks at a frequency of ~2.4 Hz.
+
+  + A reset button and an enable button are both implemented for this blinker LED.
+
+## Design and Testing Methodology
+
+The design uses a total of 3 modules:
+
+* lab1_jl.sv (the top module)
+
+  + the on-board high speed oscillator (`HSOSC`) was used to generate a signal at 48 MHz
+
+  + the switch-to-LED logic was assigned [combinational logic].
+
+  + used 2 submodules:
+
+    - counter_2_4Hz.sv [sequential logic]: simple clock divider that converts the 48 Mhz `HSOSC` signal to a 2.4Hz signal. Implemented enable and reset.
+
+    - switch_to_display.sv [combinational logic]: contained the logic for the switch input to seven segment display output.
+
+  
+The submodule counter_2_4Hz.sv 
+
+::: {.callout-note collapse="true"}
+## 2.4 Hz Counter Submodule: Calculations for Max Count Threshold
+![Calculations for Max Count Threshold](lab1_images/maxCounterCalcs.png){#fig-maxCounerCalcs}
+:::
+
+
+## Technical Documentation:
+
+The code for this project can be found in this [Github repository](https://github.com/jesli12/e155-lab1).
+
+### Block Diagram
+
+::: {.callout-note collapse="true"}
+## Block Diagram
+![Block Diagram of the HDL design](lab1_images/lab1BlockDiagram.jpeg){#fig-block}
+::: 
+
+The block diagram in @fig-block demonstrates the overall architecture of the design.
+
+
+### Schematic
+
+::: {.callout-note collapse="true"}
+## Schematic
+![Schematic of the circuit.](lab1_images/lab1Schematic.jpeg){#fig-schematic}
+
+Schematic of the physical circuit.
+:::
+
+@fig-schematic shows the physical layout of the design.
+Internal 100 k$\Omega$ pullup resistors were used to ensure the active low was not floating for the buttons and the 4 switch inputs.
+Each segment in the 7-segment display was connected using a 150 k$\Omega$ current-limiting resistor to ensure the [FINISH]
+
+
+## Results and Discussion
+
+::: {.callout-note title="Results and Discussion" }
+Did you accomplish all of the prescribed tasks? If not, what are the shortcomings? How might you address them given more time? As appropriate, how did the design perform (e.g., How fast/accurate/reliable was it?).
+:::
+
+All prescribed tasks and specifications were met. Thorough verification can be found below.
+
+### Testbench Simulation
+
+::: {#fig-testbench}
+
+![](images/testbench-screenshot.png)
+
+A screenshot of a QuestaSim simulation demonstrating the blinking output signal. Note that the timescale for the clock divider was modified to divide by 4.
+:::
+
+The design met all intended design objectives.
+@fig-testbench shows a screenshot of the QuestaSim simulation.
+If a more precise output frequency was desired, a more sophisticated counter could be developed.
+The current design only allows for the clock to be divided by powers of two.
+
+## Conclusion
+
+::: {.callout-note title="Conclusion" }
+Briefly summarize what was done and how it performed. Also note how many hours you spent working on the lab.
+:::
+
+The design successfully completed its functions.
+I spent roughly a total of 30 hours working on this lab.
+
+## AI Prototype Summary
+
+Include generated code, easy-to-read chat transcripts, and a reflection on how well it worked.
