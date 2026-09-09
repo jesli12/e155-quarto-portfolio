@@ -1,0 +1,142 @@
+[
+  {
+    "objectID": "resources.html",
+    "href": "resources.html",
+    "title": "Resources",
+    "section": "",
+    "text": "These are some related resources to my work in E155. More will be added as I continue the course (F’26 Semester).\n\nE155 Course Website"
+  },
+  {
+    "objectID": "labs/lab1/lab1.html",
+    "href": "labs/lab1/lab1.html",
+    "title": "Lab 1: FPGA and MCU Setup and Testing",
+    "section": "",
+    "text": "In this lab, the E155 course development pcb board was assembled and tested. Once functionally validated, a design was implemented on the FPGA with the following features:\n\nA 7-segment display that shows the hexadecimal digit corresponding to a 4 bit binary number.\n\nThe digit displayed is controlled by 4 switches on the development board, which map out the 4 bit binary number.\n\nLED 1 and LED 2 on the development board light up according to a given look-up table, dependent on the input of the same 4 switches.\nLED 3 blinks at a frequency of ~2.4 Hz.\n\nA reset button and an enable button are both implemented for this blinker LED."
+  },
+  {
+    "objectID": "labs/lab1/lab1.html#introduction",
+    "href": "labs/lab1/lab1.html#introduction",
+    "title": "Lab 1: FPGA and MCU Setup and Testing",
+    "section": "",
+    "text": "In this lab, the E155 course development pcb board was assembled and tested. Once functionally validated, a design was implemented on the FPGA with the following features:\n\nA 7-segment display that shows the hexadecimal digit corresponding to a 4 bit binary number.\n\nThe digit displayed is controlled by 4 switches on the development board, which map out the 4 bit binary number.\n\nLED 1 and LED 2 on the development board light up according to a given look-up table, dependent on the input of the same 4 switches.\nLED 3 blinks at a frequency of ~2.4 Hz.\n\nA reset button and an enable button are both implemented for this blinker LED."
+  },
+  {
+    "objectID": "labs/lab1/lab1.html#design-and-testing-methodology",
+    "href": "labs/lab1/lab1.html#design-and-testing-methodology",
+    "title": "Lab 1: FPGA and MCU Setup and Testing",
+    "section": "Design and Testing Methodology",
+    "text": "Design and Testing Methodology\nThe design uses a total of 3 modules:\n\nlab1_jl.sv (the top module)\n\nthe on-board high speed oscillator (HSOSC) was used to generate a signal at 48 MHz\nthe switch-to-LED logic was assigned [combinational logic].\nused 2 submodules:\n\ncounter_2_4Hz.sv [sequential logic]: simple clock divider that converts the 48 Mhz HSOSC signal to a 2.4Hz signal. Implemented enable and reset.\nswitch_to_display.sv [combinational logic]: contained the logic for the switch input to seven segment display output.\n\n\n\nThe submodule counter_2_4Hz.sv uses a simple counter to divide the 48 MHz clock signal down to 2.4 Hz. The maximum count threshold was calculated as follows:\n\n\n\n\n\n\nNote2.4 Hz Counter Submodule: Calculations for Max Count Threshold\n\n\n\n\n\n\n\n\n\n\n\nFigure 1: Calculations for Max Count Threshold"
+  },
+  {
+    "objectID": "labs/lab1/lab1.html#technical-documentation",
+    "href": "labs/lab1/lab1.html#technical-documentation",
+    "title": "Lab 1: FPGA and MCU Setup and Testing",
+    "section": "Technical Documentation:",
+    "text": "Technical Documentation:\nThe code for this project can be found in this Github repository.\n\nBlock Diagram\n\n\n\n\n\n\nNoteBlock Diagram\n\n\n\n\n\n\n\n\n\n\n\nFigure 2: Block Diagram of the HDL design\n\n\n\n\n\n\nThe block diagram in Figure 2 demonstrates the overall architecture of the design.\n\n\nSchematic\n\n\n\n\n\n\nNoteSchematic\n\n\n\n\n\n\n\n\n\n\n\nFigure 3: Schematic of the circuit.\n\n\n\nNote that the 7-segment display (MAN6460) is a common anode display, so the segments are active low.\n\n\n\nFigure 3 shows the physical layout of the design. Internal 100 k\\(\\Omega\\) pullup resistors were used to ensure the active low was not floating for the buttons and the 4 switch inputs. Each segment in the 7-segment display was connected using a 150 \\(\\Omega\\) current-limiting resistor to ensure that it stays within recommended operating conditions. Calculations for the current-limiting resistors for the common anode 7-segment display are shown below.\n\n\n\n\n\n\nNoteCalculations for Current-Limiting Resistors for 7-segment Display\n\n\n\n\n\n\\[\nI_D=\\frac{V_{DD}-V_{ON}}{R_S+R_D}\n\\]\nWe can assume \\(R_S\\) (internal resistance)to be negligible. The voltage provided by the development board is \\(V_{DD}\\) = 3.3 V, and \\(V_{ON}\\) = 2.1 V according to the 7-segment display datasheet. \\(I_D = 8\\) mA was chosen as it falls within the ideal range of 5-20 mA and results in a standard \\(R_D\\) value.\nSolving the equation results in a resistor value of 150 \\(\\Omega\\)."
+  },
+  {
+    "objectID": "labs/lab1/lab1.html#results-and-discussion",
+    "href": "labs/lab1/lab1.html#results-and-discussion",
+    "title": "Lab 1: FPGA and MCU Setup and Testing",
+    "section": "Results and Discussion",
+    "text": "Results and Discussion\nAll prescribed tasks and specifications were met. Thorough verification can be found below.\n\nTestbench Simulation\nFor verification, one testbench was written for each of the 3 modules. Below are the QuestaSim simulations."
+  },
+  {
+    "objectID": "labs/lab1/lab1.html#counter-submodule-tests-counter_2_4hz",
+    "href": "labs/lab1/lab1.html#counter-submodule-tests-counter_2_4hz",
+    "title": "Lab 1: FPGA and MCU Setup and Testing",
+    "section": "Counter Submodule Tests: Counter_2_4Hz",
+    "text": "Counter Submodule Tests: Counter_2_4Hz\n\n\n\n\n\n\nNoteCounter Testbench QuestaSim Results\n\n\n\n\n\n\n\n\n\n\n\nFigure 4: Counter Testbench Tests 1a\n\n\n\nThis first waveform validates that reset and enable work as intended for the counter. The waveform shows that when reset is asserted (active low), the counter resets to 0. When enable is turned off (active high), the counter freezes at its current value. Other scenarios are tested in the following frame in the waveforms.\n\n\n\n\n\n\nFigure 5: Counter Testbench Tests 1b to 3b\n\n\n\nThis frame in the waveform validates that the counter is counting as expected, when it reaches the maximum count threshold, it resets to 0, toggles the LED, and starts counting again. Enable is turned off once it reaches the maximum count to demonstrate that the counter can be frozen at a non-zero value as well. Finally, reset is tested to show that the counter and LED can be set back to 0 (starting from non-zero values)"
+  },
+  {
+    "objectID": "labs/lab1/lab1.html#segment-submodule-tests-switch_to_display",
+    "href": "labs/lab1/lab1.html#segment-submodule-tests-switch_to_display",
+    "title": "Lab 1: FPGA and MCU Setup and Testing",
+    "section": "7-segment Submodule Tests: switch_to_display",
+    "text": "7-segment Submodule Tests: switch_to_display\n\n\n\n\n\n\nNote7-segment Display Testbench QuestaSim Results\n\n\n\n\n\n\n\n\n\n\n\nFigure 6: switch_to_display testbench waveforms\n\n\n\nThe waveform shows that the 7-segment display is displaying the correct hexadecimal digit based on the input from the 4 switches. (Note that the 7-segment display (MAN6460) is a common anode display, so the segments are active low.)"
+  },
+  {
+    "objectID": "labs/lab1/lab1.html#top-module-tests-lab1_jl",
+    "href": "labs/lab1/lab1.html#top-module-tests-lab1_jl",
+    "title": "Lab 1: FPGA and MCU Setup and Testing",
+    "section": "Top Module Tests: lab1_jl",
+    "text": "Top Module Tests: lab1_jl\n\n\n\n\n\n\nNoteTop Module Testbench QuestaSim Results\n\n\n\n\n\n\n\n\n\n\n\nFigure 7: Top Module Testbench Waveforms Tests 1 through 3a\n\n\n\n\n\n\n\n\n\nFigure 8: Top Module Testbench Waveforms Tests 3b\n\n\n\nFirst, the cursor shows that the HSOCS is accurately generating a 48 MHz clock signal. The first cycle ends roughly at 20.029 ns, and the period for a 48 MHz signal is 20.833 ns. This shows that the top module is correctly connected to the HSOSC primitive.\nThe waveform also shows that LED 1 and LED 2 are lighting up according to the given look-up table based on the input from the 4 switches.\nThe waveform shows that the 7-segment display is displaying the correct hexadecimal digit based on the input from the 4 switches. This shows that the top module is correctly connected to the switch_to_display submodule. (Note that the 7-segment display (MAN6460) is a common anode display, so the segments are active low.)\nFinally, the waveform shows that enable and reset work as intended for the blinker LED[2]. This shows that the top module is correctly connected to the counter_2_4Hz submodule.\n\n\n\n\n\n\n\n\n\nNoteVerifying 2.4 Hz Blinker LED\n\n\n\n\n\n\n\n\n\n\n\nFigure 9: Oscilloscope Confirmation\n\n\n\nThe oscilloscope screenshot in Figure 9 confirms that the blinker LED is toggling at the expected frequency of 2.4 Hz.\n\n\n\n\n\n\nFigure 10: QuestaSim Waveform for a Half-cycle of Blinker LED\n\n\n\nThis was also confirmed in the QuestaSim simulation of the top module, as shown in Figure 10. The waveform shows a completed half-cycle of the blinker LED (roughly 208333333 ns), which is consistent with the expected behavior of a 2.4 Hz blinking LED.\n\n\n\nThe design met all intended design objectives."
+  },
+  {
+    "objectID": "labs/lab1/lab1.html#conclusion",
+    "href": "labs/lab1/lab1.html#conclusion",
+    "title": "Lab 1: FPGA and MCU Setup and Testing",
+    "section": "Conclusion",
+    "text": "Conclusion\nAs demonstrated above, the design successfully completed its functions. It was able to blink an on-board LED at 2.4 Hz, display the correct hexadecimal digit on a 7-segment display based on the input from 4 switches, and light up two other LEDs according to a given look-up table.\nI spent roughly a total of 40 hours working on this lab and report."
+  },
+  {
+    "objectID": "labs/lab1/lab1.html#ai-prototype-summary",
+    "href": "labs/lab1/lab1.html#ai-prototype-summary",
+    "title": "Lab 1: FPGA and MCU Setup and Testing",
+    "section": "AI Prototype Summary",
+    "text": "AI Prototype Summary\n\n\n\n\n\n\nNoteLLM Prompt\n\n\n\n\n\n“Write SystemVerilog HDL to leverage the internal high speed oscillator in the Lattice UP5K FPGA and blink an LED at 2 Hz. Take full advantage of SystemVerilog syntax, for example, using logic instead of wire and reg.”\n\n\n\n\n\n\n\n\n\nNoteAI Prototype Code\n\n\n\n\n\n// Written by Gemini Pro // Target Device: Lattice iCE40UP5K // Description: Drives an LED at 2 Hz using the internal high-speed oscillator (HSOSC)\nmodule top ( output logic led );\n  // Internal clock signal driven by the Lattice HSOSC primitive\n  logic clk_48mhz;\n\n  // Lattice iCE40 UltraPlus High-Speed Oscillator Primitive\n  // Parameters configure the output frequency:\n  // \"0b00\" = 48 MHz (Default)\n  // \"0b01\" = 24 MHz\n  // \"0b10\" = 12 MHz\n  // \"0b11\" = 6 MHz\n  HSOSC #(\n      .CLKHF_DIV(\"0b00\") \n  ) hf_osc_inst (\n      .CLKHFPU(1'b1),     // Power up the oscillator\n      .CLKHFEN(1'b1),     // Enable clock output\n      .CLKHF  (clk_48mhz) // Output clock signal\n  );\n\n  // 48 MHz clock period = ~20.83 ns\n  // To toggle an LED at 2 Hz (0.5s period), we need 24,000,000 clock cycles per toggle.\n  // $clog2(24_000_000) requires a 25-bit counter (2^25 = 33,554,432).\n  localparam int CLK_FREQ_HZ = 48_000_000;\n  localparam int TOGGLE_COUNT = (CLK_FREQ_HZ / 2) - 1;\n\n  logic [24:0] count = '0;\n\n  // Clock division logic\n  always_ff @(posedge clk_48mhz) begin\n      if (count == TOGGLE_COUNT) begin\n          count &lt;= '0;\n          led   &lt;= ~led; // Toggle LED state every 0.5s (2 Hz toggle rate)\n      end else begin\n          count &lt;= count + 1'b1;\n      end\n  end\nendmodule\n\n\n\nThe code above was generated by Gemini Pro. It was used to create a simple 2 Hz LED blinker using the internal high-speed oscillator of the Lattice iCE40UP5K FPGA. On its first attempt, the code synthesized and successfully implemented a clock divider to achieve the desired blinking frequency.\nI was suprised by the thoroughness of the comments in the generated code despite the fact that the prompt did not explicitly request it.\nLastly, after careful review of the code, I found that the generated code revealed a minor inaccuracy in my own code. After calculating the desired toggle length, Gemini Pro’s code subtracts 1 from the toggle count to ensure that the LED toggles at exactly 2 Hz. My code did not include this adjustment, which would resulted in a slightly slower blink rate (by one clock cycle per toggle). This is a minor inaccuracy as the error in the 48 MHz clock generated by the HSOSC is the dominant factor of error."
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Jessica’s E155 Portfolio",
+    "section": "",
+    "text": "Jessica Li is a 3rd year Engineering major at Harvey Mudd College, and this is her E155 (Microprocessor Systems: Design & Application) portfolio. She especially enjoys project-based learning, and is excited to share her work through this website!\nOutside of engineering, Jessica still seeks out project-based learning opportunities, and enjoys exploring new crafts. She has completed 30+ crochet projects, attempted 3d minatures, and has recently started learning how to embroider and macrame."
+  },
+  {
+    "objectID": "blog.html",
+    "href": "blog.html",
+    "title": "E155 Blog",
+    "section": "",
+    "text": "Hello Quarto\n\n\nThe start of my E155 journey!\n\n\n\n\n\nSep 1, 2026\n\n\nJessica Li\n\n\n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "labs/index.html#lab-2-multiplexed-7-segment-display",
+    "href": "labs/index.html#lab-2-multiplexed-7-segment-display",
+    "title": "Labs",
+    "section": "Lab 2: Multiplexed 7-Segment Display",
+    "text": "Lab 2: Multiplexed 7-Segment Display"
+  },
+  {
+    "objectID": "labs/index.html#lab-3-keypad-scanner",
+    "href": "labs/index.html#lab-3-keypad-scanner",
+    "title": "Labs",
+    "section": "Lab 3: Keypad Scanner",
+    "text": "Lab 3: Keypad Scanner"
+  },
+  {
+    "objectID": "labs/index.html#lab-4-digital-audio",
+    "href": "labs/index.html#lab-4-digital-audio",
+    "title": "Labs",
+    "section": "Lab 4: Digital Audio",
+    "text": "Lab 4: Digital Audio"
+  },
+  {
+    "objectID": "labs/index.html#lab-5-interrupts",
+    "href": "labs/index.html#lab-5-interrupts",
+    "title": "Labs",
+    "section": "Lab 5: Interrupts",
+    "text": "Lab 5: Interrupts"
+  },
+  {
+    "objectID": "labs/index.html#lab-6-the-internet-of-things-and-serial-peripheral-interface-spi",
+    "href": "labs/index.html#lab-6-the-internet-of-things-and-serial-peripheral-interface-spi",
+    "title": "Labs",
+    "section": "Lab 6: The Internet of Things and Serial Peripheral Interface (SPI)",
+    "text": "Lab 6: The Internet of Things and Serial Peripheral Interface (SPI)"
+  },
+  {
+    "objectID": "labs/index.html#lab-7-the-advanced-encryption-standard",
+    "href": "labs/index.html#lab-7-the-advanced-encryption-standard",
+    "title": "Labs",
+    "section": "Lab 7: The Advanced Encryption Standard",
+    "text": "Lab 7: The Advanced Encryption Standard"
+  },
+  {
+    "objectID": "posts/first-post.html",
+    "href": "posts/first-post.html",
+    "title": "Hello Quarto",
+    "section": "",
+    "text": "This is my first blog post in my E155 portfolio! I am super excited to start this class, and it’s definitely been one I’ve been anticipating for a while. So far, I’ve been able to broadly touch upon circuits and digital electronics, and I am looking forward to learning more in depth.\nI hope to take away a series of projects that I can use to showcase my skills in the future, and I also hope to learn more about the field of electrical/embedded systems engineering. Beyond just the technical skills, I will also aim to practice my communication skills and technical writing, as I know that these are important transferable skillsfor any engineer to have.\nI also see this course as a challenge for myself in terms of time management and organization, as I know that the workload will be heavy and that project progress is often not a linear process."
+  }
+]
