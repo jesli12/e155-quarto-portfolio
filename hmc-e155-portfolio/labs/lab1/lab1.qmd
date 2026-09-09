@@ -66,7 +66,7 @@ The block diagram in @fig-block demonstrates the overall architecture of the des
 ## Schematic
 ![Schematic of the circuit.](lab1_images/lab1Schematic.jpeg){#fig-schematic}
 
-Schematic of the physical circuit. Note that the 7-segment display (MAN6460) is a common anode display, so the segments are active low. 
+Note that the 7-segment display (MAN6460) is a common anode display, so the segments are active low. 
 :::
 
 @fig-schematic shows the physical layout of the design.
