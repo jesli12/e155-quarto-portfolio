@@ -111,6 +111,8 @@ Since the common anode pins from the dual seven-segment display require a large 
 ## Calculations for the Seven-Segment Display Circuit Resistors
 ![PNP Transistor and Resistor Calculations](lab2_images/pnp.jpeg){#fig-pnp}
 
+![Resistor Calculations](lab2_images/diode.jpeg)
+
 Calculations for the PNP transistors and resistors used in the seven-segment display circuit. 
 :::
 
