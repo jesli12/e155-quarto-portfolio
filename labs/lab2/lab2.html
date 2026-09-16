@@ -8,7 +8,7 @@
 
 <meta name="description" content="Lab 2 Report for E155">
 
-<title>Lab 2: Lab 2: Multiplexed 7-Segment Display – E155 Portfolio</title>
+<title>Lab 2: Multiplexed 7-Segment Display – E155 Portfolio</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -183,7 +183,7 @@ window.Quarto = {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Lab 2: Lab 2: Multiplexed 7-Segment Display</h1>
+<h1 class="title">Lab 2: Multiplexed 7-Segment Display</h1>
   <div class="quarto-categories">
     <div class="quarto-category">reflection</div>
     <div class="quarto-category">labreport</div>
@@ -226,7 +226,38 @@ window.Quarto = {
 </ul>
 <section id="video-demos" class="level3">
 <h3 class="anchored" data-anchor-id="video-demos">Video Demos</h3>
-<p></p><div class="quarto-video"><video id="video_shortcode_videojs_video1" class="video-js vjs-default-skin vjs-big-play-centered vjs-fluid" controls="" preload="auto" data-setup="{}" title="Lab 2: Scanner and Keypad Demo"><source src="lab2_images/E155_lab2_ScannerKeypad.mp4"></video></div> <div class="quarto-video"><video id="video_shortcode_videojs_video2" class="video-js vjs-default-skin vjs-big-play-centered vjs-fluid" controls="" preload="auto" data-setup="{}" title="Lab 2: Dual Seven-Segment Display Demo"><source src="lab2_images/E155_lab2_sevenSegment.mp4"></video></div><p></p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Lab 2: Scanner and Keypad Demo
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<div class="quarto-video"><video id="video_shortcode_videojs_video1" class="video-js vjs-default-skin vjs-big-play-centered vjs-fluid" controls="" preload="auto" data-setup="{}" title="Lab 2: Scanner and Keypad Demo"><source src="lab2_images/E155_lab2_ScannerKeypad.mp4"></video></div>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Lab 2: Multiplexed Seven-Segment Display Demo
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-2" class="callout-2-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<div class="quarto-video"><video id="video_shortcode_videojs_video2" class="video-js vjs-default-skin vjs-big-play-centered vjs-fluid" controls="" preload="auto" data-setup="{}" title="Lab 2: Dual Seven-Segment Display Demo"><source src="lab2_images/E155_lab2_sevenSegment.mp4"></video></div>
+</div>
+</div>
+</div>
 </section>
 </section>
 <section id="design-and-testing-methodology" class="level2">
@@ -293,7 +324,7 @@ Figure&nbsp;1: Block diagram of the Verilog design, as described in the Design a
 <h3 class="anchored" data-anchor-id="schematic">Schematic</h3>
 <p>The dual seven-segment display circuit was implemented separately from the keypad circuit. The schematic of the physical circuits are shown below.</p>
 <div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -302,7 +333,7 @@ Figure&nbsp;1: Block diagram of the Verilog design, as described in the Design a
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div id="callout-3" class="callout-3-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <div id="fig-schematic_sev_seg" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
@@ -321,7 +352,7 @@ Figure&nbsp;2: Schematic of the Seven-Segment Display Circuit
 <p><a href="#fig-schematic_sev_seg" class="quarto-xref">Figure&nbsp;2</a> shows the physical layout of the dual seven-segment display circuit. Note: Internal 100 k<span class="math inline">\(\Omega\)</span> pullup resistors were used to ensure the active low pins are not floating.</p>
 <p>Since the common anode pins from the dual seven-segment display require a large current to drive the display, PNP transistors were used to allow the FPGA output pins to drive the anode pins. The base of each transistor was connected to the FPGA output pin through a 330 <span class="math inline">\(\Omega\)</span> resistor to limit the base current. The collector of each transistor was connected to the common anode pin of each digit on the dual seven-segment display, and the emitter was connected to +3.3 V.</p>
 <div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -330,7 +361,7 @@ Figure&nbsp;2: Schematic of the Seven-Segment Display Circuit
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-2" class="callout-2-contents callout-collapse collapse">
+<div id="callout-4" class="callout-4-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <div id="fig-pnp" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
@@ -347,7 +378,7 @@ Figure&nbsp;3: PNP Transistor and Resistor Calculations
 </div>
 </div>
 <div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -356,7 +387,7 @@ Figure&nbsp;3: PNP Transistor and Resistor Calculations
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-3" class="callout-3-contents callout-collapse collapse">
+<div id="callout-5" class="callout-5-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <div id="fig-schematic_scanner" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
@@ -376,7 +407,7 @@ Figure&nbsp;4: Schematic of the Scanner and Keypad Circuit
 <p>The matrix keypad is implemented such that signals are asserted to each row one at a time, and the column inputs are read to determine which key is pressed. However, multiple touches on the keypad can result in unusual electrical conditions: pressing two keys in the same column will short two row drivers, which can result in difficult to predict voltages.</p>
 <p>To address this problem NPN transistors were used to create open-drain/collector outputs, which is a type of output driven by the drain/collector of a transistor. When the output is asserted, the transistor will pull down, but when the output is deasserted, the transistor will be off and the output will be floating. This allows multiple outputs to be connected together without shorting them together. To convert the FPGA pin to an open-drain output, the pin drives the base of a transistor and have the emitter connected to ground.</p>
 <div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -385,7 +416,7 @@ Figure&nbsp;4: Schematic of the Scanner and Keypad Circuit
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-4" class="callout-4-contents callout-collapse collapse">
+<div id="callout-6" class="callout-6-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <div id="fig-npn" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
@@ -415,7 +446,7 @@ Figure&nbsp;5: NPN Transistor and Resistor Calculations
 <section id="scanner-submodule-tests-scanner.sv" class="level4">
 <h4 class="anchored" data-anchor-id="scanner-submodule-tests-scanner.sv">Scanner Submodule Tests: scanner.sv</h4>
 <div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -424,7 +455,7 @@ Figure&nbsp;5: NPN Transistor and Resistor Calculations
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-5" class="callout-5-contents callout-collapse collapse">
+<div id="callout-7" class="callout-7-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <div id="fig-scannertb" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
@@ -444,7 +475,7 @@ Figure&nbsp;6: Scanner Testbench Waveforms
 <section id="top-module-tests-lab2top_jl.sv" class="level4">
 <h4 class="anchored" data-anchor-id="top-module-tests-lab2top_jl.sv">Top Module Tests: lab2top_jl.sv</h4>
 <div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-8-contents" aria-controls="callout-8" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -453,7 +484,7 @@ Figure&nbsp;6: Scanner Testbench Waveforms
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-6" class="callout-6-contents callout-collapse collapse">
+<div id="callout-8" class="callout-8-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <div id="fig-colToLED" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
@@ -492,7 +523,7 @@ Figure&nbsp;8: Top Module Tests Testbench Waveforms
 <h2 class="anchored" data-anchor-id="ai-prototype-summary">AI Prototype Summary</h2>
 <p>To explore the capability and usage of AI, the following prompts were entered into Gemini Pro:</p>
 <div class="callout callout-style-default callout-note callout-titled" title="LLM Prompt 1">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-9-contents" aria-controls="callout-9" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -501,14 +532,14 @@ Figure&nbsp;8: Top Module Tests Testbench Waveforms
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-7" class="callout-7-contents callout-collapse collapse">
+<div id="callout-9" class="callout-9-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p>“Write SystemVerilog HDL to time multiplex a single seven segment decoder (that decodes from four bits to a common anode seven segment display) to decode two sets of input bits and drive two sets of seven output bits.”</p>
 </div>
 </div>
 </div>
 <div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-8-contents" aria-controls="callout-8" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-10-contents" aria-controls="callout-10" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -517,7 +548,7 @@ Figure&nbsp;8: Top Module Tests Testbench Waveforms
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-8" class="callout-8-contents callout-collapse collapse">
+<div id="callout-10" class="callout-10-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p>module lab2_ai_proto_no_assist #( parameter integer CLK_FREQ_HZ = 50_000_000, // Input clock frequency in Hz parameter integer REFRESH_HZ = 200 // Desired overall refresh rate )( input logic clk, // System clock input logic rst, // Active-high asynchronous reset input logic [3:0] in0, // 4-bit data for Display 0 input logic [3:0] in1, // 4-bit data for Display 1 output logic [6:0] seg0_n, // Active-low segment outputs for Display 0 {g,f,e,d,c,b,a} output logic [6:0] seg1_n, // Active-low segment outputs for Display 1 {g,f,e,d,c,b,a} output logic an0, // Anode control for Display 0 (Active HIGH) output logic an1 // Anode control for Display 1 (Active HIGH) );</p>
 <pre><code>// Calculate clock division limit for digit toggle (switches at 2 * REFRESH_HZ)
@@ -602,7 +633,7 @@ end</code></pre>
 </div>
 <p>In comparison, prompt #2 included attachments of the counter submodule and the single seven segment submodule.</p>
 <div class="callout callout-style-default callout-note callout-titled" title="LLM Prompt 2">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-9-contents" aria-controls="callout-9" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-11-contents" aria-controls="callout-11" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -611,14 +642,14 @@ end</code></pre>
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-9" class="callout-9-contents callout-collapse collapse">
+<div id="callout-11" class="callout-11-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p>“Write SystemVerilog HDL to time multiplex a single seven segment decoder (that decodes from four bits to a common anode seven segment display) to decode two sets of input bits and drive two sets of seven output bits. Use the seven segment decoder and oscillator provided in the attached files.”</p>
 </div>
 </div>
 </div>
 <div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-10-contents" aria-controls="callout-10" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-12-contents" aria-controls="callout-12" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -627,7 +658,7 @@ end</code></pre>
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-10" class="callout-10-contents callout-collapse collapse">
+<div id="callout-12" class="callout-12-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p>module lab2_ai_proto2 ( input logic clk, input logic rst, input logic en, // Kept in port list for compatibility input logic [3:0] in0, input logic [3:0] in1, output logic [6:0] display0, output logic [6:0] display1 );</p>
 <pre><code>logic       select;
