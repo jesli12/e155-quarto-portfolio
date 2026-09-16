@@ -15,13 +15,22 @@ In this lab, a design was implemented on the FPGA with the following features:
 
   - Frequency of display toggling did not result in visual flicker or electronic bleeding.
 
-* Simple transistor (NPN and PNP) circuits to drive large currents from the FPGA pins.
-
 * Implemented a 4 by 4 keypad and verified that logic signals can pass through it.
 
   - LEDs were used to help visualize the connections.
 
+* Simple PNP transistor circuits to drive large currents from the FPGA pins, and NPN transistor circuits to implement open-drain/collector output for multiple simultaneous keypad presses.
+
 * Modular Verilog systems
+
+### Video Demos
+
+{{< video lab2_images/E155_lab2_ScannerKeypad.mp4
+    title='Lab 2: Scanner and Keypad Demo'
+>}}
+{{< video lab2_images/E155_lab2_sevenSegment.mp4
+    title='Lab 2: Dual Seven-Segment Display Demo'
+>}}
 
 
 ## Design and Testing Methodology
@@ -31,7 +40,7 @@ to allow a single seven-segment decoder HDL module to drives the cathodes for bo
 
 This project also implements a 4 by 4 keypad, four rows and four columns, connected to 8 pins. When a key is pressed, 
 the corresponding row and column are connected. A four-output scanning circuit was built to rotate between exerting 1000, 0100, 0010, and 0001 such that each bit toggles at a rate of 2 Hz. 
-These outputs of the scanning circuit are connected to the rows of the keypad, and the four columns were connected to input pins. The column input pins are read and driven to four external LEDs. The result 
+These outputs of the scanning circuit are connected to the rows of the keypad, and the four columns are connected to input pins. The column input pins are read and driven to four external LEDs. The result 
 of this arrangement is that a single key press will cause the LED to blink at a rate of 2 Hz, as the row is activated at a rate of 2 Hz. NPN transistors were used to connect the FPGA outputs to the keypad rows to allow for 
 multiple simultaneous key presses.
 
@@ -69,23 +78,55 @@ The source code for the project can be found in the associated [Github repositor
 ### Block Diagram
 
 ::: {#fig-block-diagram}
-![](images/block-diagram.png)
+![Block Diagram](lab2_images/block.jpeg){#fig-block-diagram}
 
-Block diagram of the Verilog design.
+Block diagram of the Verilog design, as described in the Design and Testing Methodology section. 
 :::
 
-The block diagram in @fig-block-diagram demonstrates the overall architecture of the design.
+The block diagram in @fig-block-diagram demonstrates the overall architecture of the design. The top module (lab2top_jl) contains instantiations of the submodules (counter, sev_seg, and scanner). The top module also contains the mux logic for driving the dual seven segment display and the keypad's column input to LED output logic.
 
 ### Schematic
-::: {#fig-schematic}
-![](images/schematic.png)
 
-Schematic of the physical circuit.
+The dual seven-segment display circuit was implemented separately from the keypad circuit. The schematic of the physical circuits are shown below.
+
+::: {.callout-note collapse="true"}
+## Schematic of the Seven-Segment Display Circuit
+![Schematic of the Seven-Segment Display Circuit](lab2_images/schematic_sev_seg.jpeg){#fig-schematic_sev_seg}
+
+Schematic of the physical dual seven-segment display circuit.
 :::
 
-@fig-schematic shows the physical layout of the design. [JESSICA CHANGE THIS INFO]
-An internal 100 k$\Omega$ pullup resistor was used to ensure the active low reset pin was not floating.
-The output LED was connected using a 1 k$\Omega$ current-limiting resistor to ensure the output current (~2.6 mA) did not exceed the maximum output current of the FPGA I/O pins.
+@fig-schematic_sev_seg shows the physical layout of the dual seven-segment display circuit.
+Note: Internal 100 k$\Omega$ pullup resistors were used to ensure the active low pins are not floating.
+
+Since the common anode pins from the dual seven-segment display require a large current to drive the display, PNP transistors were used to allow the FPGA output pins to drive the anode pins. The base of each transistor was connected to the FPGA output pin through a 330 $\Omega$ resistor to limit the base current. The collector of each transistor was connected to the common anode pin of each digit on the dual seven-segment display, and the emitter was connected to +3.3 V.
+
+::: {.callout-note collapse="true"}
+## Calculations for the Seven-Segment Display Circuit Resistors
+![PNP Transistor and Resistor Calculations](lab2_images/pnp.jpeg){#fig-pnp}
+
+Calculations for the PNP transistors and resistors used in the seven-segment display circuit. 
+:::
+
+::: {.callout-note collapse="true"}
+## Schematic of the Scanner and Keypad Circuit
+![Schematic of the Scanner and Keypad Circuit](lab2_images/schematic_scanner.png){#fig-schematic_scanner}
+
+Schematic of the physical scanner and keypad circuit.
+:::
+
+@fig-schematic_scanner shows the physical layout of the scanner and keypad circuit. The scanner circuit is implemented using a 4-bit counter that cycles through the four rows of the keypad at a rate of 2 Hz. The column inputs are connected to four LEDs to visualize which key is pressed.
+
+The matrix keypad is implemented such that signals are asserted to each row one at a time, and the column inputs are read to determine which key is pressed. However, multiple touches on the keypad can result in unusual electrical conditions: pressing two keys in the same column will short two row drivers, which can result in difficult to predict voltages. 
+
+To address this problem NPN transistors were used to create open-drain/collector outputs, which is a type of output driven by the drain/collector of a transistor. When the output is asserted, the transistor will pull down, but when the output is deasserted, the transistor will be off and the output will be floating. This allows multiple outputs to be connected together without shorting them together. To convert the FPGA pin to an open-drain output, the pin drives the base of a transistor and have the emitter connected to ground. 
+
+::: {.callout-note collapse="true"}
+## Calculations for Scanner and Keypad Circuit Resistors
+![NPN Transistor and Resistor Calculations](lab2_images/npn.jpeg){#fig-npn}
+
+Calculations for the NPN transistors and resistors used in the scanner and keypad circuit. 
+:::
 
 ## Results and Discussion
 
@@ -101,7 +142,7 @@ Two testbenches were written, one tested the new scanner module (for the keypad'
 
 Below are the QuestaSim simulations.
 
-## Scanner Submodule Tests: scanner.sv
+#### Scanner Submodule Tests: scanner.sv
 
 ::: {.callout-note collapse="true"}
 ## Scanner Testbench QuestaSim Results
@@ -112,7 +153,7 @@ This waveform demonstrates the FPGA 4 pin output that drives power to the keypad
 
 :::
 
-## Top Module Tests: lab2top_jl.sv
+#### Top Module Tests: lab2top_jl.sv
 
 ::: {.callout-note collapse="true"}
 ## Top Module Testbench QuestaSim Results
@@ -128,7 +169,7 @@ This waveform demonstrates the multiplexing functionality (for the 7-segment swi
 
 ## Conclusion
 
-This design successfully implemented a time-multiplexing scheme to drive two seven-segment displays with a single set of FPGA I/O pins (minimizing hardware).A 4 by 4 keypad was also implemented 
+This design successfully implemented a time-multiplexing scheme to drive two seven-segment displays with a single set of FPGA I/O pins (minimizing hardware). A 4 by 4 keypad was also implemented 
 and verified that logic signals can pass through it.
 
 I spent roughly a total of 25 hours working on this lab.
@@ -305,6 +346,8 @@ endmodule
 :::
 
 From the first prompt, which did not include submodule attachments, the code is much harder to read when all logic is implemented in-line. 
-There's also an interesting use of always blocks (always_comb and always_ff) instead of assign like I did. Most of the SystemVerilog syntax I recognize,
+There's also an interesting use of always blocks (always_comb and always_ff) instead of assign like I did.
+
+Most of the SystemVerilog syntax I recognize,
 but the one thing I didn't recognize was the first output's use of $clog2, a math function that means ceiling of log base 2 (automatically calulcating the number of bits needed). 
 I think this makes the code cleaner, especially as some initial bugs I had in the project came from incorrectly setting bit size parameters for my counters.
