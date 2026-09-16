@@ -8,7 +8,10 @@ draft: false
 ---
 ## Introduction
 
-In this lab, the E155 course development pcb board was assembled and tested. Once functionally validated, a design was implemented on the FPGA 
+This is the first lab of the course, where students assemble and test the development pcb board that houses the MCU, FPGA, and various switches and buttons. The base hardware for the first half of the course 
+is set up and tested here. 
+
+Once functionally validated, a design was implemented on the FPGA 
 with the following features:
 
 * A 7-segment display that shows the hexadecimal digit corresponding to a 4 bit binary number.
@@ -20,6 +23,8 @@ with the following features:
 * LED 3 blinks at a frequency of ~2.4 Hz.
 
   + A reset button and an enable button are both implemented for this blinker LED.
+
+The following report details the design and testing methodology of the lab project's implementation.
 
 ## Design and Testing Methodology
 
@@ -154,6 +159,8 @@ As demonstrated above, the design successfully completed its functions. It was a
 I spent roughly a total of 40 hours working on this lab and report.
 
 ## AI Prototype Summary
+
+To explore the capability and usage of AI, the following prompts were entered into Gemini Pro:
 
 ::: {.callout-note title="LLM Prompt" collapse="true"}
 "Write SystemVerilog HDL to leverage the internal high speed oscillator in the Lattice UP5K FPGA and blink an LED at 2 Hz. Take full advantage of SystemVerilog syntax, for example, using logic instead of wire and reg."

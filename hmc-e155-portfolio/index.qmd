@@ -12,6 +12,7 @@ about:
           href: https://github.com/jesli12
 ---
 
-Jessica Li is a 3rd year Engineering major at [Harvey Mudd College](https://hmc.edu), and this is her E155 (Microprocessor Systems: Design & Application) portfolio. She especially enjoys project-based learning, and is excited to share her work through this website! 
+Jessica Li is a 3rd year Engineering major at [Harvey Mudd College](https://hmc.edu), and this is her E155 (Microprocessor Systems: Design & Application) portfolio. 
+She especially enjoys project-based learning, and is excited to share her work through this website! This website is currently in progress, and it will be updated on a weekly basis. 
 
-Outside of engineering, Jessica still seeks out project-based learning opportunities, and enjoys exploring new crafts. She has completed 30+ crochet projects, attempted 3d minatures, and has recently started learning how to embroider and macrame.
+Outside of engineering, Jessica still seeks out project-based learning opportunities, and enjoys exploring new crafts. She has completed 30+ crochet projects and has recently started learning how to embroider and macrame.
