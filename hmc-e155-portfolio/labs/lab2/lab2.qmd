@@ -1,5 +1,5 @@
 ---
-title: "Lab 2: Lab 2: Multiplexed 7-Segment Display"
+title: "Lab 2: Multiplexed 7-Segment Display"
 description: "Lab 2 Report for E155"
 categories:
   - reflection
@@ -24,13 +24,19 @@ In this lab, a design was implemented on the FPGA with the following features:
 * Modular Verilog systems
 
 ### Video Demos
-
+::: {.callout-note collapse="false"}
+## Lab 2: Scanner and Keypad Demo
 {{< video lab2_images/E155_lab2_ScannerKeypad.mp4
     title='Lab 2: Scanner and Keypad Demo'
 >}}
+:::
+
+::: {.callout-note collapse="false"}
+## Lab 2: Multiplexed Seven-Segment Display Demo
 {{< video lab2_images/E155_lab2_sevenSegment.mp4
     title='Lab 2: Dual Seven-Segment Display Demo'
 >}}
+:::
 
 
 ## Design and Testing Methodology
