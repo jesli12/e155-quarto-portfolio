@@ -56,6 +56,13 @@ Block diagram of the Verilog design, as described in the Design and Testing Meth
 
 The block diagram in @fig-block-diagram demonstrates the overall architecture of the design. 
 
+### State Transition Diagrams
+
+::: {#fig-state-diagram}
+![StateDiagram](lab3_images/paper.jpeg){#fig-state-diagram}
+
+:::
+
 ### Schematic
 
 The dual seven-segment display circuit was implemented separately from the keypad circuit. The schematic of the physical circuits are shown below.
