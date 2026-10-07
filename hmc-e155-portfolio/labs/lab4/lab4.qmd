@@ -1,5 +1,5 @@
 ---
-title: "Lab 4 Report"
+title: "Lab 4 Report: Digital Audio"
 description: "Lab 4 Report for E155"
 categories:
   - reflection
@@ -24,7 +24,7 @@ Thus, max frequency is 500000 Hz, and minimum is 7.5 Hz (excluding the 0 Hz case
 Note that a frequency of 0 is supported by special case handling.
 :::
 
-Find Fur Elise Accuracy calculations [here.] (https://docs.google.com/spreadsheets/d/1u3_AweWqI6BGVOK50YBDLLOC6eYB2ToBYOBJxcAP9Fw/edit?usp=sharing)
+Find Fur Elise Accuracy calculations [here](https://docs.google.com/spreadsheets/d/1u3_AweWqI6BGVOK50YBDLLOC6eYB2ToBYOBJxcAP9Fw/edit?usp=sharing).
 
 
 ## Technical Documentation:

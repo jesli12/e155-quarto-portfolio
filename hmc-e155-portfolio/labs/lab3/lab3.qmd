@@ -1,5 +1,5 @@
 ---
-title: "Lab 3 Report"
+title: "Lab 3 Report: Keypad Scanner"
 description: "Lab 3 Report for E155"
 categories:
   - reflection

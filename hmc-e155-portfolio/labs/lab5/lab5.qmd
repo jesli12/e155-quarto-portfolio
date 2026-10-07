@@ -1,8 +1,90 @@
 ---
-title: "Lab 5 Report"
+title: "Lab 5 Report: Interrupts"
 description: "Lab 5 Report for E155"
 categories:
   - reflection
   - labreport
 draft: false
 ---
+
+
+## Introduction
+In this project, I use my MCU to determine the velocity of a motor by reading from a quadrature encoder using interrupts.
+
+In summary, in this project, I...
+
+* Implemented an algorithm to sense quadrature encoder pulses and convert those pulses into a motor velocity.
+
+* Written code to display the measured speed and direction to a user with an update rate of at least 1 Hz.
+
+* Understood the quadrature encoder protocol and implemented a multi-interrupt routine on the MCU to interface with it.
+
+::: {.callout-note collapse="true"}
+## Background: What is a quadrature encoder?
+![Quadrature Encoders](lab5_images/quadrature_encoder.gif){#fig-encoder}
+
+Quadrature encoders contain two stationary digital sensors, and a disc that rotates with the motor. The one I worked with in this project used magnets and hall effect sensors to produce signals. The two sensors are 90° degrees out of phase, which provides higher angular resolution and can be used to determine the direction and speed of rotation. 
+:::
+
+## Design and Testing Methodology
+
+::: {.callout-note collapse="true"}
+## Max/Min Duration and Frequency Supported Calculations
+![Calculations](lab4_images/lab4-calcs.png){#fig-calcs}
+
+Thus, max frequency is 500000 Hz, and minimum is 7.5 Hz (excluding the 0 Hz case).
+
+Note that a frequency of 0 is supported by special case handling.
+:::
+
+
+
+## Technical Documentation:
+
+The source code for the project can be found in the associated [Github repository](https://github.com/jesli12/e155-lab5).
+
+
+### Flowchart
+
+The flowchart below describes the sequence flow of the design.
+
+::: {.callout-note collapse="true"}
+## Flowchart
+![Flowchart](lab5_images/flowchart.jpeg){#fig-flowchart}
+
+Interrupt A is triggered on a signal edge of an input pin A, and Interrupt B is triggered on a signal edge of an input pin B.
+
+A global counter that reset per 1 second cycle is incremented each time an interrupt is triggered, which serves as the tracked number of pulses within the cycle that is used to determine speed.
+:::
+
+### Schematic
+
+A DC motor was wired to the MCU, and received 12V power from a external power supply.
+
+::: {.callout-note collapse="true"}
+## Schematic
+![Schematic](lab4_images/schematic.png){#fig-schematic}
+
+Schematic of the set up.
+:::
+
+
+## Results and Discussion
+
+All specifications were met.
+
+## Conclusion
+
+This project successfully measured and reported speed [rotations per second] and direction [clockwise and counterclockwise].
+
+I spent roughly a total of 10 hours working on this lab.
+
+## AI Prototype Summary
+
+To explore the capability and usage of AI for writing correct interrupt-driven embedded C, the following prompts were entered into Gemini Pro after the project was completed:
+
+::: {.callout-note title="LLM Prompts" collapse="true"}
+"Write me interrupt handlers to interface with a quadrature encoder. I’m using the STM32L432KC, what pins should I connect the encoder to in order to allow it to easily trigger the interrupts?"
+:::
+
+[TODO]
