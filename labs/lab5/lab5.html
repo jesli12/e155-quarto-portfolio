@@ -388,8 +388,12 @@ Figure&nbsp;3: Lab 5 Schematic
 </div>
 <div id="callout-6" class="callout-6-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<p>/* 1. In Main Setup */ HAL_TIM_Encoder_Start(&amp;htim2, TIM_CHANNEL_ALL);</p>
-<p>/* 2. Reading position and direction in your application loop */ int32_t encoder_count = __HAL_TIM_GET_COUNTER(&amp;htim2); uint8_t direction = __HAL_TIM_IS_TIM_COUNTING_DOWN(&amp;htim2); // 1 = Down (CCW), 0 = Up (CW)</p>
+<pre><code>/* 1. In Main Setup */
+HAL_TIM_Encoder_Start(&amp;htim2, TIM_CHANNEL_ALL);
+
+/* 2. Reading position and direction in your application loop */
+int32_t encoder_count = __HAL_TIM_GET_COUNTER(&amp;htim2);
+uint8_t direction = __HAL_TIM_IS_TIM_COUNTING_DOWN(&amp;htim2); // 1 = Down (CCW), 0 = Up (CW)</code></pre>
 </div>
 </div>
 </div>
@@ -407,7 +411,16 @@ Figure&nbsp;3: Lab 5 Schematic
 </div>
 <div id="callout-7" class="callout-7-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<p>void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) { if (GPIO_Pin == GPIO_PIN_0) { // Channel A edge triggered // Read Channel B state to determine direction if (HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_1) == GPIO_PIN_RESET) { encoder_count++; // Clockwise } else { encoder_count–; // Counter-Clockwise } } }</p>
+<pre><code>void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
+    if (GPIO_Pin == GPIO_PIN_0) { // Channel A edge triggered
+        // Read Channel B state to determine direction
+        if (HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_1) == GPIO_PIN_RESET) {
+            encoder_count++; // Clockwise
+        } else {
+            encoder_count--; // Counter-Clockwise
+        }
+    }
+}</code></pre>
 </div>
 </div>
 </div>
