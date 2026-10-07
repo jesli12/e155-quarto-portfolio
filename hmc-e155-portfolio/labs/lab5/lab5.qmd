@@ -105,8 +105,40 @@ I spent roughly a total of 10 hours working on this lab.
 
 To explore the capability and usage of AI for writing correct interrupt-driven embedded C, the following prompts were entered into Gemini Pro after the project was completed:
 
-::: {.callout-note title="LLM Prompts" collapse="true"}
+::: {.callout-note title="LLM Prompt" collapse="true"}
 "Write me interrupt handlers to interface with a quadrature encoder. I’m using the STM32L432KC, what pins should I connect the encoder to in order to allow it to easily trigger the interrupts?"
 :::
 
-[TODO]
+Gemini Pro's initial response was to suggest another method instead. 
+
+"The best way to interface a quadrature encoder with an STM32 MCU is not to write GPIO edge-triggered interrupt handlers (EXTI). Instead, use the STM32's built-in Hardware Encoder Mode on its General-Purpose Timers."
+
+A sample of the output code can be found below.
+
+::: {.callout-note title="LLM Output" collapse="true"}
+/* 1. In Main Setup */
+HAL_TIM_Encoder_Start(&htim2, TIM_CHANNEL_ALL);
+
+/* 2. Reading position and direction in your application loop */
+int32_t encoder_count = __HAL_TIM_GET_COUNTER(&htim2);
+uint8_t direction = __HAL_TIM_IS_TIM_COUNTING_DOWN(&htim2); // 1 = Down (CCW), 0 = Up (CW)
+:::
+
+I find it interesting that it would ignore my prompt, infer my task, and propose a different solution. In reality, this project's target was learning about and utilizing interrupts, for which Gemini's implementation entirely misses. Along with that context issue, the pins it attempts to use are also occupied on the development board, as PA0 and PA1 are routed to a MCU mikro BUS Socket instead. As such, the generated code was unable to run.
+
+With some coaxing, it was able to generate some C for interrupt implementation:
+
+::: {.callout-note title="LLM Output" collapse="true"}
+  void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
+      if (GPIO_Pin == GPIO_PIN_0) { // Channel A edge triggered
+          // Read Channel B state to determine direction
+          if (HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_1) == GPIO_PIN_RESET) {
+              encoder_count++; // Clockwise
+          } else {
+              encoder_count--; // Counter-Clockwise
+          }
+      }
+  }
+:::
+
+This nested if-else structure seems to be for a slightly different purpose than the project I implemented. Instead of outputting rotational direction, it seems to track rotational position using encoder_count. 
