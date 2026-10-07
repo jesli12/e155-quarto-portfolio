@@ -83,7 +83,7 @@ A DC motor was wired to the MCU, and received 12V power from a external power su
 
 ::: {.callout-note collapse="true"}
 ## Schematic
-![Lab 5 Schematic](lab5_images/schematic.png){#fig-schematic}
+![Lab 5 Schematic](lab5_images/fixed-schematic.png){#fig-schematic}
 
 Schematic of the set up. 
 Author: Jessica Li 
