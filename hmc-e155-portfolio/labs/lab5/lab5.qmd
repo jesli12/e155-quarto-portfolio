@@ -116,12 +116,14 @@ Gemini Pro's initial response was to suggest another method instead.
 A sample of the output code can be found below.
 
 ::: {.callout-note title="LLM Output" collapse="true"}
-/* 1. In Main Setup */
-HAL_TIM_Encoder_Start(&htim2, TIM_CHANNEL_ALL);
+  ```
+  /* 1. In Main Setup */
+  HAL_TIM_Encoder_Start(&htim2, TIM_CHANNEL_ALL);
 
-/* 2. Reading position and direction in your application loop */
-int32_t encoder_count = __HAL_TIM_GET_COUNTER(&htim2);
-uint8_t direction = __HAL_TIM_IS_TIM_COUNTING_DOWN(&htim2); // 1 = Down (CCW), 0 = Up (CW)
+  /* 2. Reading position and direction in your application loop */
+  int32_t encoder_count = __HAL_TIM_GET_COUNTER(&htim2);
+  uint8_t direction = __HAL_TIM_IS_TIM_COUNTING_DOWN(&htim2); // 1 = Down (CCW), 0 = Up (CW)
+  ```
 :::
 
 I find it interesting that it would ignore my prompt, infer my task, and propose a different solution. In reality, this project's target was learning about and utilizing interrupts, for which Gemini's implementation entirely misses. Along with that context issue, the pins it attempts to use are also occupied on the development board, as PA0 and PA1 are routed to a MCU mikro BUS Socket instead. As such, the generated code was unable to run.
@@ -129,6 +131,7 @@ I find it interesting that it would ignore my prompt, infer my task, and propose
 With some coaxing, it was able to generate some C for interrupt implementation:
 
 ::: {.callout-note title="LLM Output" collapse="true"}
+  ```
   void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
       if (GPIO_Pin == GPIO_PIN_0) { // Channel A edge triggered
           // Read Channel B state to determine direction
@@ -139,6 +142,7 @@ With some coaxing, it was able to generate some C for interrupt implementation:
           }
       }
   }
+  ```
 :::
 
 This nested if-else structure seems to be for a slightly different purpose than the project I implemented. Instead of outputting rotational direction, it seems to track rotational position using encoder_count. 
