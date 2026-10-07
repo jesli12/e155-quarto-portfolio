@@ -2,21 +2,24 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.9.38">
+<meta name="generator" content="quarto-1.10.18">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="description" content="Lab 5 Report for E155">
 
-<title>Lab 5 Report – E155 Portfolio</title>
+<title>Lab 5 Report: Interrupts – E155 Portfolio</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
 */
-code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
-div.columns{display: flex; gap: min(4vw, 1.5em);}
-div.column{flex: auto; overflow-x: auto;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
 div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
@@ -40,10 +43,10 @@ ul.task-list li input[type="checkbox"] {
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-a0f9fd0d421825b736dc1bbcbcba2219.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-172ba59bd5e0b52282274ba0c0cc16fc.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -72,6 +75,35 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <link rel="stylesheet" href="../../styles.css">
 </head>
@@ -120,15 +152,35 @@ ul.task-list li input[type="checkbox"] {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
+  <li><a href="#design-and-implementation-methodology" id="toc-design-and-implementation-methodology" class="nav-link" data-scroll-target="#design-and-implementation-methodology">Design and Implementation Methodology</a>
+  <ul class="collapse">
+  <li><a href="#determining-rotational-direction-using-2-quadrature-encoders" id="toc-determining-rotational-direction-using-2-quadrature-encoders" class="nav-link" data-scroll-target="#determining-rotational-direction-using-2-quadrature-encoders">Determining Rotational Direction using 2 Quadrature Encoders</a></li>
+  <li><a href="#calculating-speed-using-2-quadrature-encoders" id="toc-calculating-speed-using-2-quadrature-encoders" class="nav-link" data-scroll-target="#calculating-speed-using-2-quadrature-encoders">Calculating Speed using 2 Quadrature Encoders</a></li>
+  <li><a href="#why-use-interrupts-over-a-polling-strategy" id="toc-why-use-interrupts-over-a-polling-strategy" class="nav-link" data-scroll-target="#why-use-interrupts-over-a-polling-strategy">Why use interrupts over a polling strategy?</a></li>
+  </ul></li>
+  <li><a href="#technical-documentation" id="toc-technical-documentation" class="nav-link" data-scroll-target="#technical-documentation">Technical Documentation:</a>
+  <ul class="collapse">
+  <li><a href="#flowchart" id="toc-flowchart" class="nav-link" data-scroll-target="#flowchart">Flowchart</a></li>
+  <li><a href="#schematic" id="toc-schematic" class="nav-link" data-scroll-target="#schematic">Schematic</a></li>
+  </ul></li>
+  <li><a href="#results-and-discussion" id="toc-results-and-discussion" class="nav-link" data-scroll-target="#results-and-discussion">Results and Discussion</a></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
+  <li><a href="#ai-prototype-summary" id="toc-ai-prototype-summary" class="nav-link" data-scroll-target="#ai-prototype-summary">AI Prototype Summary</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Lab 5 Report</h1>
+<h1 class="title">Lab 5 Report: Interrupts</h1>
   <div class="quarto-categories">
     <div class="quarto-category">reflection</div>
     <div class="quarto-category">labreport</div>
@@ -154,8 +206,177 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
+<section id="introduction" class="level2">
+<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
+<p>In this project, I use my MCU to determine the velocity of a motor by reading from a quadrature encoder using interrupts.</p>
+<p>In summary, in this project, I…</p>
+<ul>
+<li><p>Implemented an algorithm to sense quadrature encoder pulses and convert those pulses into a motor velocity.</p></li>
+<li><p>Written code to display the measured speed and direction to a user with an update rate of at least 1 Hz.</p></li>
+<li><p>Understood the quadrature encoder protocol and implemented a multi-interrupt routine on the MCU to interface with it.</p></li>
+</ul>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Background: What is a quadrature encoder?
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div id="fig-encoder" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-encoder-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="lab5_images/quadrature_encoder.gif" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-encoder-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1: Quadrature Encoders
+</figcaption>
+</figure>
+</div>
+<p>Quadrature encoders contain two stationary digital sensors, and a disc that rotates with the motor. The one I worked with in this project used magnets and hall effect sensors to produce signals. The two sensors are 90° degrees out of phase, which provides higher angular resolution and can be used to determine the direction and speed of rotation.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="design-and-implementation-methodology" class="level2">
+<h2 class="anchored" data-anchor-id="design-and-implementation-methodology">Design and Implementation Methodology</h2>
+<section id="determining-rotational-direction-using-2-quadrature-encoders" class="level3">
+<h3 class="anchored" data-anchor-id="determining-rotational-direction-using-2-quadrature-encoders">Determining Rotational Direction using 2 Quadrature Encoders</h3>
+<p><img src="lab5_images/direction.jpeg" id="fig-direction" class="img-fluid" alt="Directions"> This diagram shows how the two encoder signals would look when the motor is rotating in a clockwise or counter clockwise direction (refer to <a href="#fig-encoder" class="quarto-xref">Figure&nbsp;1</a> for animated visualization). It is important to note that the two sensors are 90° degrees out of phase, thus the signals are shifted accordingly.</p>
+<p>The interrupts are set to trigger at the rising and falling edges, with a separate interrupt handler for each sensor (sensor A and sensor B). Once an interrupt triggers, the respective handler runs and determines if it occured on a rising or falling edge, and then determines if the other sensor’s signal is high or low. The specific pairing of these two values result in the direction, as depicted in the figure above.</p>
+</section>
+<section id="calculating-speed-using-2-quadrature-encoders" class="level3">
+<h3 class="anchored" data-anchor-id="calculating-speed-using-2-quadrature-encoders">Calculating Speed using 2 Quadrature Encoders</h3>
+<p>To calculate the speed of rotation, the total number of edge-triggered interrupts was tracked in a 1 second interval, and then calculated to find the number of revolutions per second.</p>
+<p>As a timer counts up to a 1 second interval, a counter is incremented each time an interrupt is triggered for the rising or falling edges of either sensor A or B. This means, for every 1 pulse, 4 interrupts are triggered and as such the counter is incremented 4 times.</p>
+<p>The following equation was used to determine the speed:</p>
+<p><span class="math inline">\(speed = count / (4 * ppr)\)</span></p>
+<p>Where the pulse per revolution (<span class="math inline">\(ppr\)</span>) is given by the motor’s datasheet (in this case, it is 408 pulses per revolution).</p>
+<p>Triggering interrupts at the falling and rising edge for both sensors increases accuracy as it divides the time interval of a single pulse into 4, allowing for a higher resolution of measurement.</p>
+</section>
+<section id="why-use-interrupts-over-a-polling-strategy" class="level3">
+<h3 class="anchored" data-anchor-id="why-use-interrupts-over-a-polling-strategy">Why use interrupts over a polling strategy?</h3>
+<p>Polling requires the processor to continuously check and monitor the two sensor inputs for rising and falling edges. This can be inefficient when the checks come as blank on higher resolution frequencies, but edges can be misses at lower resolution polling frequencies (signal aliasing). Especially since the motor speed is undetermined and can be varied, a polling strategy can be more difficult to achieve accuracy. Also, this sampling accuracy is significant in a polling strategy because it must be careful about interpreting logic highs and lows as rising or falling edges or if it had just sampled in the middle of a pulse (instead of an edge).</p>
+<p>Interrupts must trigger at the edges, and thus if implemented correctly (interrupts are resolved quickly), it would be difficult to miss edge triggers that polling might be subjected to. Using interrupts allow us to be confident that either a rising or falling edge has occured.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Polling Inaccuracy Example
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-2" class="callout-2-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>For more exploration of why polling might create inaccuracies, let’s work through the following scenario. For example, say the motor has 408 pulses per revolution, and the motor spins at 2.5 revolutions a second. This means that for every second, there is 1020 pulses a second. Since we need to count each rising and falling edge, that is 1020*4=4080 counter incrementations in a one second interval (4080 Hz!). This frequency assumes that each sample occurs near a signal edge consistently, so for accurate representation of the readings, a much higher sampling frequency must be chosen. However, this required frequency may change with the rotational speed of the motor, and cause aliasing if it results in undersampling.</p>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="technical-documentation" class="level2">
+<h2 class="anchored" data-anchor-id="technical-documentation">Technical Documentation:</h2>
+<p>The source code for the project can be found in the associated <a href="https://github.com/jesli12/e155-lab5">Github repository</a>.</p>
+<section id="flowchart" class="level3">
+<h3 class="anchored" data-anchor-id="flowchart">Flowchart</h3>
+<p>The flowchart below describes the sequence flow of the design.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Flowchart
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-3" class="callout-3-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div id="fig-flowchart" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-flowchart-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="lab5_images/flowchart.jpeg" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-flowchart-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2: Flowchart
+</figcaption>
+</figure>
+</div>
+<p>Interrupt A is triggered on a signal edge of an input pin A, and Interrupt B is triggered on a signal edge of an input pin B.</p>
+<p>A global counter that reset per 1 second cycle is incremented each time an interrupt is triggered, which serves as the tracked number of pulses within the cycle that is used to determine speed.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="schematic" class="level3">
+<h3 class="anchored" data-anchor-id="schematic">Schematic</h3>
+<p>A DC motor was wired to the MCU, and received 12V power from a external power supply.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Schematic
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-4" class="callout-4-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div id="fig-schematic" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-schematic-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="lab5_images/schematic.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-schematic-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3: Schematic
+</figcaption>
+</figure>
+</div>
+<p>Schematic of the set up.</p>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="results-and-discussion" class="level2">
+<h2 class="anchored" data-anchor-id="results-and-discussion">Results and Discussion</h2>
+<p>All specifications were met.</p>
+</section>
+<section id="conclusion" class="level2">
+<h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>
+<p>This project successfully measured and reported speed [rotations per second] and direction [clockwise and counterclockwise].</p>
+<p>I spent roughly a total of 10 hours working on this lab.</p>
+</section>
+<section id="ai-prototype-summary" class="level2">
+<h2 class="anchored" data-anchor-id="ai-prototype-summary">AI Prototype Summary</h2>
+<p>To explore the capability and usage of AI for writing correct interrupt-driven embedded C, the following prompts were entered into Gemini Pro after the project was completed:</p>
+<div class="callout callout-style-default callout-note callout-titled" title="LLM Prompts">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>LLM Prompts
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-5" class="callout-5-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>“Write me interrupt handlers to interface with a quadrature encoder. I’m using the STM32L432KC, what pins should I connect the encoder to in order to allow it to easily trigger the interrupts?”</p>
+</div>
+</div>
+</div>
+<p>[TODO]</p>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
