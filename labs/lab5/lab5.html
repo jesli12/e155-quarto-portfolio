@@ -357,13 +357,13 @@ Figure&nbsp;3: Lab 5 Schematic
 <section id="ai-prototype-summary" class="level2">
 <h2 class="anchored" data-anchor-id="ai-prototype-summary">AI Prototype Summary</h2>
 <p>To explore the capability and usage of AI for writing correct interrupt-driven embedded C, the following prompts were entered into Gemini Pro after the project was completed:</p>
-<div class="callout callout-style-default callout-note callout-titled" title="LLM Prompts">
+<div class="callout callout-style-default callout-note callout-titled" title="LLM Prompt">
 <div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Note</span>LLM Prompts
+<span class="screen-reader-only">Note</span>LLM Prompt
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
@@ -373,7 +373,45 @@ Figure&nbsp;3: Lab 5 Schematic
 </div>
 </div>
 </div>
-<p>[TODO]</p>
+<p>Gemini Pro’s initial response was to suggest another method instead.</p>
+<p>“The best way to interface a quadrature encoder with an STM32 MCU is not to write GPIO edge-triggered interrupt handlers (EXTI). Instead, use the STM32’s built-in Hardware Encoder Mode on its General-Purpose Timers.”</p>
+<p>A sample of the output code can be found below.</p>
+<div class="callout callout-style-default callout-note callout-titled" title="LLM Output">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>LLM Output
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-6" class="callout-6-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>/* 1. In Main Setup */ HAL_TIM_Encoder_Start(&amp;htim2, TIM_CHANNEL_ALL);</p>
+<p>/* 2. Reading position and direction in your application loop */ int32_t encoder_count = __HAL_TIM_GET_COUNTER(&amp;htim2); uint8_t direction = __HAL_TIM_IS_TIM_COUNTING_DOWN(&amp;htim2); // 1 = Down (CCW), 0 = Up (CW)</p>
+</div>
+</div>
+</div>
+<p>I find it interesting that it would ignore my prompt, infer my task, and propose a different solution. In reality, this project’s target was learning about and utilizing interrupts, for which Gemini’s implementation entirely misses. Along with that context issue, the pins it attempts to use are also occupied on the development board, as PA0 and PA1 are routed to a MCU mikro BUS Socket instead. As such, the generated code was unable to run.</p>
+<p>With some coaxing, it was able to generate some C for interrupt implementation:</p>
+<div class="callout callout-style-default callout-note callout-titled" title="LLM Output">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>LLM Output
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-7" class="callout-7-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) { if (GPIO_Pin == GPIO_PIN_0) { // Channel A edge triggered // Read Channel B state to determine direction if (HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_1) == GPIO_PIN_RESET) { encoder_count++; // Clockwise } else { encoder_count–; // Counter-Clockwise } } }</p>
+</div>
+</div>
+</div>
+<p>This nested if-else structure seems to be for a slightly different purpose than the project I implemented. Instead of outputting rotational direction, it seems to track rotational position using encoder_count.</p>
 
 
 </section>
