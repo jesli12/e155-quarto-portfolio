@@ -350,11 +350,11 @@ Figure&nbsp;3: Read Decimal Transaction
 <div id="callout-6" class="callout-6-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p>“I’m making a web portal to interface with a temperature sensor. Create a HTML page that looks good and is intuitive to show the temperature, control an LED, and change the precision of the readout.”</p>
-<p>Output: <img src="lab6_images/ai_prototype_webpage.png" id="fig-aiWebPage" class="img-fluid"></p>
+<p>Output: <img src="lab6_images/ai_prototype_webpage.png" id="fig-ai" class="img-fluid" alt="AI Webpage"></p>
 </div>
 </div>
 </div>
-<p>It gave me a very clean and nicely design webpage, but the code was very long and more complex than it needed to be in my opinion. After some feedback from me, I ended up with Gemini Pro generating me the webpage seen in <strong>?@fig-aiWebPage</strong>. It is relatively simple but still looks more aesthetic and intuitive than the bare-bones html I originally had. One downside: even after giving Gemini Pro my original html webpage code, it still couldnt give me working buttons for resolution control. There were buttons on the webpage, but the ones specifically for measurement resolution control were unresponsive and did not send requests. The LED control ones worked fine.</p>
+<p>It gave me a very clean and nicely design webpage, but the code was very long and more complex than it needed to be in my opinion. After some feedback from me, I ended up with Gemini Pro generating me the webpage seen in the callout above. It is relatively simple but still looks more aesthetic and intuitive than the bare-bones html I originally had. One downside: even after giving Gemini Pro my original html webpage code, it still couldnt give me working buttons for resolution control. There were buttons on the webpage, but the ones specifically for measurement resolution control were unresponsive and did not send requests. The LED control ones worked fine.</p>
 <div class="callout callout-style-default callout-note callout-titled" title="LLM Prompt 2: Low-level Embedded C">
 <div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
@@ -463,48 +463,48 @@ float DS1722_ReadTemperature(void)
         return (float)temp_int + temp_fraction;
     }
 }</code></pre>
-<pre><code>  void DS1722_SPI1_Init(void)
-  {
-    // 1. Enable Clocks for GPIOB and SPI1
-    LL_AHB2_GRP1_EnableClock(LL_AHB2_GRP1_PERIPH_GPIOB);
-    LL_APB2_GRP1_EnableClock(LL_APB2_GRP1_PERIPH_SPI1);
+<pre><code>void DS1722_SPI1_Init(void)
+{
+  // 1. Enable Clocks for GPIOB and SPI1
+  LL_AHB2_GRP1_EnableClock(LL_AHB2_GRP1_PERIPH_GPIOB);
+  LL_APB2_GRP1_EnableClock(LL_APB2_GRP1_PERIPH_SPI1);
 
-    // 2. Configure PB0 as CS Output (Active-HIGH)
-    LL_GPIO_SetPinMode(GPIOB, LL_GPIO_PIN_0, LL_GPIO_MODE_OUTPUT);
-    LL_GPIO_SetPinOutputType(GPIOB, LL_GPIO_PIN_0, LL_GPIO_OUTPUT_PUSHPULL);
-    LL_GPIO_SetPinSpeed(GPIOB, LL_GPIO_PIN_0, LL_GPIO_SPEED_FREQ_HIGH);
-    LL_GPIO_ResetOutputPin(GPIOB, LL_GPIO_PIN_0); // Default CS LOW (Idle)
+  // 2. Configure PB0 as CS Output (Active-HIGH)
+  LL_GPIO_SetPinMode(GPIOB, LL_GPIO_PIN_0, LL_GPIO_MODE_OUTPUT);
+  LL_GPIO_SetPinOutputType(GPIOB, LL_GPIO_PIN_0, LL_GPIO_OUTPUT_PUSHPULL);
+  LL_GPIO_SetPinSpeed(GPIOB, LL_GPIO_PIN_0, LL_GPIO_SPEED_FREQ_HIGH);
+  LL_GPIO_ResetOutputPin(GPIOB, LL_GPIO_PIN_0); // Default CS LOW (Idle)
 
-    // 3. Configure PB3 (SCK), PB4 (MISO), PB5 (MOSI) as Alternate Function AF5
-    LL_GPIO_SetPinMode(GPIOB, LL_GPIO_PIN_3, LL_GPIO_MODE_ALTERNATE);
-    LL_GPIO_SetAFPin_0_7(GPIOB, LL_GPIO_PIN_3, LL_GPIO_AF_5);
-    LL_GPIO_SetPinSpeed(GPIOB, LL_GPIO_PIN_3, LL_GPIO_SPEED_FREQ_HIGH);
+  // 3. Configure PB3 (SCK), PB4 (MISO), PB5 (MOSI) as Alternate Function AF5
+  LL_GPIO_SetPinMode(GPIOB, LL_GPIO_PIN_3, LL_GPIO_MODE_ALTERNATE);
+  LL_GPIO_SetAFPin_0_7(GPIOB, LL_GPIO_PIN_3, LL_GPIO_AF_5);
+  LL_GPIO_SetPinSpeed(GPIOB, LL_GPIO_PIN_3, LL_GPIO_SPEED_FREQ_HIGH);
 
-    LL_GPIO_SetPinMode(GPIOB, LL_GPIO_PIN_4, LL_GPIO_MODE_ALTERNATE);
-    LL_GPIO_SetAFPin_0_7(GPIOB, LL_GPIO_PIN_4, LL_GPIO_AF_5);
-    LL_GPIO_SetPinSpeed(GPIOB, LL_GPIO_PIN_4, LL_GPIO_SPEED_FREQ_HIGH);
+  LL_GPIO_SetPinMode(GPIOB, LL_GPIO_PIN_4, LL_GPIO_MODE_ALTERNATE);
+  LL_GPIO_SetAFPin_0_7(GPIOB, LL_GPIO_PIN_4, LL_GPIO_AF_5);
+  LL_GPIO_SetPinSpeed(GPIOB, LL_GPIO_PIN_4, LL_GPIO_SPEED_FREQ_HIGH);
 
-    LL_GPIO_SetPinMode(GPIOB, LL_GPIO_PIN_5, LL_GPIO_MODE_ALTERNATE);
-    LL_GPIO_SetAFPin_0_7(GPIOB, LL_GPIO_PIN_5, LL_GPIO_AF_5);
-    LL_GPIO_SetPinSpeed(GPIOB, LL_GPIO_PIN_5, LL_GPIO_SPEED_FREQ_HIGH);
+  LL_GPIO_SetPinMode(GPIOB, LL_GPIO_PIN_5, LL_GPIO_MODE_ALTERNATE);
+  LL_GPIO_SetAFPin_0_7(GPIOB, LL_GPIO_PIN_5, LL_GPIO_AF_5);
+  LL_GPIO_SetPinSpeed(GPIOB, LL_GPIO_PIN_5, LL_GPIO_SPEED_FREQ_HIGH);
 
-    // 4. Configure SPI1 Peripheral Settings
-    // Prescaler DIV64 yields 1.25 MHz from an 80 MHz APB2 clock source
-    LL_SPI_SetBaudRatePrescaler(SPI1, LL_SPI_BAUDRATEPRESCALER_DIV64);
-    LL_SPI_SetClockPolarity(SPI1, LL_SPI_POLARITY_LOW);   // CPOL = 0
-    LL_SPI_SetClockPhase(SPI1, LL_SPI_PHASE_2EDGE);        // CPHA = 1
-    LL_SPI_SetTransferDirection(SPI1, LL_SPI_FULL_DUPLEX);
-    LL_SPI_SetDataWidth(SPI1, LL_SPI_DATAWIDTH_8BIT);
-    LL_SPI_SetNSSMode(SPI1, LL_SPI_NSS_SOFT);              // Software CS Control
-    LL_SPI_SetMode(SPI1, LL_SPI_MODE_MASTER);
-    LL_SPI_SetTransferBitOrder(SPI1, LL_SPI_MSB_FIRST);
+  // 4. Configure SPI1 Peripheral Settings
+  // Prescaler DIV64 yields 1.25 MHz from an 80 MHz APB2 clock source
+  LL_SPI_SetBaudRatePrescaler(SPI1, LL_SPI_BAUDRATEPRESCALER_DIV64);
+  LL_SPI_SetClockPolarity(SPI1, LL_SPI_POLARITY_LOW);   // CPOL = 0
+  LL_SPI_SetClockPhase(SPI1, LL_SPI_PHASE_2EDGE);        // CPHA = 1
+  LL_SPI_SetTransferDirection(SPI1, LL_SPI_FULL_DUPLEX);
+  LL_SPI_SetDataWidth(SPI1, LL_SPI_DATAWIDTH_8BIT);
+  LL_SPI_SetNSSMode(SPI1, LL_SPI_NSS_SOFT);              // Software CS Control
+  LL_SPI_SetMode(SPI1, LL_SPI_MODE_MASTER);
+  LL_SPI_SetTransferBitOrder(SPI1, LL_SPI_MSB_FIRST);
 
-    // 5. STM32L4 FIFO Threshold (Required for correct 8-bit SPI transfers)
-    LL_SPI_SetRxFIFOThreshold(SPI1, LL_SPI_RX_FIFO_TH_QUARTER);
+  // 5. STM32L4 FIFO Threshold (Required for correct 8-bit SPI transfers)
+  LL_SPI_SetRxFIFOThreshold(SPI1, LL_SPI_RX_FIFO_TH_QUARTER);
 
-    // 6. Enable SPI1
-    LL_SPI_Enable(SPI1);
-  }</code></pre>
+  // 6. Enable SPI1
+  LL_SPI_Enable(SPI1);
+}</code></pre>
 </div>
 </div>
 </div>
