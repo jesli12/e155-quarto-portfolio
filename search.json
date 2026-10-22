@@ -14,6 +14,48 @@
     "text": "This is my first blog post in my E155 portfolio! I am super excited to start this class, and it’s definitely been one I’ve been anticipating for a while. So far, I’ve been able to broadly touch upon circuits and digital electronics, and I am looking forward to learning more in depth.\nI hope to take away a series of projects that I can use to showcase my skills in the future, and I also hope to learn more about the field of electrical/embedded systems engineering. Beyond just the technical skills, I will also aim to practice my communication skills and technical writing, as I know that these are important transferable skillsfor any engineer to have.\nI also see this course as a challenge for myself in terms of time management and organization, as I know that the workload will be heavy and that project progress is often not a linear process."
   },
   {
+    "objectID": "labs/lab6/lab6.html",
+    "href": "labs/lab6/lab6.html",
+    "title": "Lab 6: The Internet of Things and Serial Peripheral Interface",
+    "section": "",
+    "text": "In this project, I built an internet-accessible device to control an onboard LED and measure ambient temperature.\nIn summary, in this project, I…\n\nWrote my own SPI device driver using Common Microcontroller Software Interface Standard (CMSIS) device templates.\nInterfaced with a temperature sensor module over an SPI link.\nInterfaced with an ESP8266 wifi module over UART link.\nWrote a simple HTML page to control resolution and display data from the temperature sensor.\nUsed the oscilloscope to capture the serial communication protocols."
+  },
+  {
+    "objectID": "labs/lab6/lab6.html#introduction",
+    "href": "labs/lab6/lab6.html#introduction",
+    "title": "Lab 6: The Internet of Things and Serial Peripheral Interface",
+    "section": "",
+    "text": "In this project, I built an internet-accessible device to control an onboard LED and measure ambient temperature.\nIn summary, in this project, I…\n\nWrote my own SPI device driver using Common Microcontroller Software Interface Standard (CMSIS) device templates.\nInterfaced with a temperature sensor module over an SPI link.\nInterfaced with an ESP8266 wifi module over UART link.\nWrote a simple HTML page to control resolution and display data from the temperature sensor.\nUsed the oscilloscope to capture the serial communication protocols."
+  },
+  {
+    "objectID": "labs/lab6/lab6.html#design-and-implementation-methodology",
+    "href": "labs/lab6/lab6.html#design-and-implementation-methodology",
+    "title": "Lab 6: The Internet of Things and Serial Peripheral Interface",
+    "section": "Design and Implementation Methodology",
+    "text": "Design and Implementation Methodology\nI chose to configure SPI for full duplex communication between the MCU (Master/controller) and the temperature sensor module (Slave/peripheral).\n\n\n\n\n\n\nNoteSPI Full Duplex Communication\n\n\n\n\n\n Source: STM32L4xxxx Reference Manual Figure 420. on page 1306.\nI used a GPIO pin to toggle control CS (chip select) instead of NSS.\n\n\n\nThe baud rate for USART between the MCU and Wifi module was set at 1.25 MHz, so the SPI baud rate was also configured to be set to 1.25 MHz. Clock phase was set to 1 to match the temperature sensor, and polarity was set to 0.\nFor SPI communication with the temperature sensor, a write transaction must occur first to communicate the address of the register being accessed. For the configuration write transaction, the MCU first sends the address of the configuration register address to the temperature sensor module (MISO), and then sends the configuration that is to be written into the register (MISO). For a read transaction, the MCU first sends the address of the measurement register address (either the decimal register or the integers register) (MISO) and then in the next 8-bit frame the temperature sensor responds with the data stored there (MOSI). To read the whole temperature measurement, I need to read twice: one read for integers, and another for decimals. These combined give the temperature measurement output displayed on the webpage. This communication can be seen in the oscilloscope traces below (Figure 1, Figure 2, Figure 3)."
+  },
+  {
+    "objectID": "labs/lab6/lab6.html#technical-documentation",
+    "href": "labs/lab6/lab6.html#technical-documentation",
+    "title": "Lab 6: The Internet of Things and Serial Peripheral Interface",
+    "section": "Technical Documentation:",
+    "text": "Technical Documentation:\nThe source code for the project can be found in the associated Github repository.\n\nSchematic\nThe schematic below shows the connections between the MCU and the external temperature sensor module.\n\n\n\n\n\n\nNoteSchematic\n\n\n\n\n\n Author: Jessica Li Date: 10/20/2026\nNote: The ESP8266 wifi module was connected directly to the base developmenet PCB, and as such is viewed as an internal connection. These schematics only show external connections.\n\n\n\n\n\nCaptured Signal Data for SPI\nThe oscilloscope traces below verify the serial communcation protocols between the MCU and the temperature sensor module. Note that a logic analyzer was unavailable to me at the time, so oscilloscope traces were used in replacement.\nThe following traces show a write transation to configure the temperature sensor, and a read temperature transaction. The data signals probed are: CS, SCK, MISO, MOSI. Note that clock phase was set to 1 and clock polarity was set to 0.\n\n\n\n\n\n\nNoteSPI Write to Configuration\n\n\n\n\n\n\n\n\n\n\n\nFigure 1: Write Transaction\n\n\n\n\n\n\n\n\n\n\n\n\nNoteSPI Read Temperature Transaction\n\n\n\n\n\n\n\n\n\n\n\nFigure 2: Read Integer Transation\n\n\n\n\n\n\n\n\n\nFigure 3: Read Decimal Transaction\n\n\n\n\n\n\n\n\n\n\n\n\nNoteExample Webpage Output\n\n\n\n\n\nThis screenshot shows the output of the previous read temperature transaction"
+  },
+  {
+    "objectID": "labs/lab6/lab6.html#conclusion",
+    "href": "labs/lab6/lab6.html#conclusion",
+    "title": "Lab 6: The Internet of Things and Serial Peripheral Interface",
+    "section": "Conclusion",
+    "text": "Conclusion\nAll project specifications were met.\nThis small simple IoT device was successfully able to interface a temperature sensor module over an SPI link, and between the MCU (STM32L432KC) and an ESP8266 module over an UART link. I was able to write and use my own driver to enable SPI communication for interfacing with the temperature sensor.\nThe temperature measured was displayed on a webpage and refreshed with every user request. It was able to correctly read temperatures across the sensor’s -10C to 30C range. Through the webpage, the user was also able to control the measurement resolution of the temperature sensor module.\nI was also able to verify the serial communication protocols and capture signal data with an oscilloscope to ensure data was passed as expected. (This was helpful during the debugging process!)\nI spent roughly a total of 15 hours working on this lab. Further improvements could be made to the webpage for aesthetics and general user-friendliness. I would also want to change the displayed significant figures of the temperature measurement to reflect the resolution selected, without any extra zeros at the end."
+  },
+  {
+    "objectID": "labs/lab6/lab6.html#ai-prototype-summary",
+    "href": "labs/lab6/lab6.html#ai-prototype-summary",
+    "title": "Lab 6: The Internet of Things and Serial Peripheral Interface",
+    "section": "AI Prototype Summary",
+    "text": "AI Prototype Summary\nTo explore the capability and usage of AI for writing correct interrupt-driven embedded C, the following prompts were entered into Gemini Pro after the project was completed:\n\n\n\n\n\n\nNoteLLM Prompt\n\n\n\n\n\n“Write me interrupt handlers to interface with a quadrature encoder. I’m using the STM32L432KC, what pins should I connect the encoder to in order to allow it to easily trigger the interrupts?”\n\n\n\nA sample of the output code can be found below.\n\n\n\n\n\n\nNoteLLM Output\n\n\n\n\n\ncode\n\n\n\n\n\n\n\n\n\nNoteLLM Output\n\n\n\n\n\ncode"
+  },
+  {
     "objectID": "labs/lab4/lab4.html",
     "href": "labs/lab4/lab4.html",
     "title": "Lab 4 Report: Digital Audio",
