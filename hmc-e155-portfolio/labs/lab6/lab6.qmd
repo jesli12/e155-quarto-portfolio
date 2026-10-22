@@ -1,10 +1,121 @@
 ---
-title: "Lab 6 Report"
+title: "Lab 6: The Internet of Things and Serial Peripheral Interface"
 description: "Lab 6 Report for E155"
 author: "Jessica Li"
-date: "9/8/2026"
+date: "10/21/2026"
 categories:
   - reflection
   - labreport
 draft: false
 ---
+
+## Introduction
+In this project, I built an internet-accessible device to control an onboard LED and measure ambient temperature. 
+
+In summary, in this project, I...
+
+* Wrote my own SPI device driver using Common Microcontroller Software Interface Standard (CMSIS) device templates.
+
+* Interfaced with a temperature sensor module over an SPI link.
+
+* Interfaced with an ESP8266 wifi module over UART link.
+
+* Wrote a simple HTML page to control resolution and display data from the temperature sensor.
+
+* Used the oscilloscope to capture the serial communication protocols.
+
+## Design and Implementation Methodology
+
+I chose to configure SPI for full duplex communication between the MCU (Master/controller) and the temperature sensor module (Slave/peripheral). 
+
+::: {.callout-note collapse="true"}
+## SPI Full Duplex Communication
+![Full Duplex Communication](lab6_images/lab6-SPI.png){#fig-SPI}
+Source: STM32L4xxxx Reference Manual Figure 420. on page 1306.
+
+I used a GPIO pin to toggle control CS (chip select) instead of NSS.
+:::
+
+The baud rate for USART between the MCU and Wifi module was set at 1.25 MHz, so the SPI baud rate was also configured to be set to 1.25 MHz. Clock phase was set to 1 to match the temperature sensor, and polarity was set to 0.
+
+For SPI communication with the temperature sensor, a write transaction must occur first to communicate the address of the register being accessed. For the configuration write transaction, the MCU first sends the address of the configuration register address to the temperature sensor module (MISO), and then sends the configuration that is to be written into the register (MISO). For a read transaction, the MCU first sends the address of the measurement register address (either the decimal register or the integers register) (MISO) and then in the next 8-bit frame the temperature sensor responds with the data stored there (MOSI). To read the whole temperature measurement, I need to read twice: one read for integers, and another for decimals. These combined give the temperature measurement output displayed on the webpage. This communication can be seen in the oscilloscope traces below (@fig-write, @fig-IntRead, @fig-DecRead).
+
+## Technical Documentation:
+
+The source code for the project can be found in the associated [Github repository](https://github.com/jesli12/e155-lab6).
+
+### Schematic
+
+The schematic below shows the connections between the MCU and the external temperature sensor module.
+
+::: {.callout-note collapse="true"}
+## Schematic
+![Lab 6 Schematic](lab6_images/lab6schematic.jpeg){#fig-schematic}
+Author: Jessica Li 
+Date: 10/20/2026
+
+Note: The ESP8266 wifi module was connected directly to the base developmenet PCB, and as such is viewed as an internal connection. These schematics only show external connections.
+:::
+
+### Captured Signal Data for SPI
+
+The oscilloscope traces below verify the serial communcation protocols between the MCU and the temperature sensor module. Note that a logic analyzer was unavailable to me at the time, so oscilloscope traces were used in replacement.
+
+The following traces show a write transation to configure the temperature sensor, and a read temperature transaction. The data signals probed are: CS, SCK, MISO, MOSI. Note that clock phase was set to 1 and clock polarity was set to 0.
+
+::: {.callout-note collapse="true"}
+## SPI Write to Configuration
+![Write Transaction](lab6_images/lab6write.png){#fig-write}
+:::
+
+::: {.callout-note collapse="true"}
+## SPI Read Temperature Transaction
+![Read Integer Transation](lab6_images/lab6intread.png){#fig-IntRead}
+
+![Read Decimal Transaction](lab6_images/lab6deciread.png){#fig-DecRead}
+:::
+
+::: {.callout-note collapse="true"}
+## Example Webpage Output
+This screenshot shows the output of the previous read temperature transaction
+![](lab6_images/lab6webpageex.png){#fig-webpage}
+:::
+
+
+## Conclusion
+
+All project [specifications](https://hmc-e155.github.io/lab/lab6/specs.html) were met.
+
+This small simple IoT device was successfully able to interface a temperature sensor module over an SPI link, and between the MCU (STM32L432KC) and an ESP8266 module over an UART link. I was able to write and use my own driver to enable SPI communication for interfacing with the temperature sensor.
+
+The temperature measured was displayed on a webpage and refreshed with every user request. It was able to correctly read temperatures across the sensor's -10C to 30C range. Through the webpage, the user was also able to control the measurement resolution of the temperature sensor module. 
+
+I was also able to verify the serial communication protocols and capture signal data with an oscilloscope to ensure data was passed as expected. (This was helpful during the debugging process!)
+
+I spent roughly a total of 15 hours working on this lab. Further improvements could be made to the webpage for aesthetics and general user-friendliness. I would also want to change the displayed significant figures of the temperature measurement to reflect the resolution selected, without any extra zeros at the end.
+
+## AI Prototype Summary
+
+To explore the capability and usage of AI for writing correct interrupt-driven embedded C, the following prompts were entered into Gemini Pro after the project was completed:
+
+::: {.callout-note title="LLM Prompt" collapse="true"}
+"Write me interrupt handlers to interface with a quadrature encoder. I’m using the STM32L432KC, what pins should I connect the encoder to in order to allow it to easily trigger the interrupts?"
+:::
+
+
+
+A sample of the output code can be found below.
+
+::: {.callout-note title="LLM Output" collapse="true"}
+  ```
+  code
+  ```
+:::
+
+
+
+::: {.callout-note title="LLM Output" collapse="true"}
+  ```
+  code
+  ```
+:::
