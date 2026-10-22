@@ -188,7 +188,7 @@ ul.task-list li input[type="checkbox"] {
 <section id="introduction" class="level2">
 <h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
 <p>In this project, I built an internet-accessible device to control an onboard LED and measure ambient temperature.</p>
-<p>In summary, in this project, I…</p>
+<p>In summary, I…</p>
 <ul>
 <li><p>Wrote my own SPI device driver using Common Microcontroller Software Interface Standard (CMSIS) device templates.</p></li>
 <li><p>Interfaced with a temperature sensor module over an SPI link.</p></li>
@@ -336,40 +336,44 @@ Figure&nbsp;3: Read Decimal Transaction
 </section>
 <section id="ai-prototype-summary" class="level2">
 <h2 class="anchored" data-anchor-id="ai-prototype-summary">AI Prototype Summary</h2>
-<p>To explore the capability and usage of AI for writing correct interrupt-driven embedded C, the following prompts were entered into Gemini Pro after the project was completed:</p>
-<div class="callout callout-style-default callout-note callout-titled" title="LLM Prompt">
+<p>To explore the capability and usage of AI for generating frontend web code vs.&nbsp;low-level embedded C, the following prompts were entered into Gemini Pro after the project was completed:</p>
+<div class="callout callout-style-default callout-note callout-titled" title="LLM Prompt 1: Frontend Web Code">
 <div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Note</span>LLM Prompt
+<span class="screen-reader-only">Note</span>LLM Prompt 1: Frontend Web Code
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
 <div id="callout-6" class="callout-6-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<p>“Write me interrupt handlers to interface with a quadrature encoder. I’m using the STM32L432KC, what pins should I connect the encoder to in order to allow it to easily trigger the interrupts?”</p>
+<p>“I’m making a web portal to interface with a temperature sensor. Create a HTML page that looks good and is intuitive to show the temperature, control an LED, and change the precision of the readout.”</p>
+<p>Output: <img src="lab6_images/ai_prototype_webpage.png" id="fig-aiWebPage" class="img-fluid"></p>
 </div>
 </div>
 </div>
-<p>A sample of the output code can be found below.</p>
-<div class="callout callout-style-default callout-note callout-titled" title="LLM Output">
+<p>It gave me a very clean and nicely design webpage, but the code was very long and more complex than it needed to be in my opinion. After some feedback from me, I ended up with Gemini Pro generating me the webpage seen in <strong>?@fig-aiWebPage</strong>. It is relatively simple but still looks more aesthetic and intuitive than the bare-bones html I originally had. One downside: even after giving Gemini Pro my original html webpage code, it still couldnt give me working buttons for resolution control. There were buttons on the webpage, but the ones specifically for measurement resolution control were unresponsive and did not send requests. The LED control ones worked fine.</p>
+<div class="callout callout-style-default callout-note callout-titled" title="LLM Prompt 2: Low-level Embedded C">
 <div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Note</span>LLM Output
+<span class="screen-reader-only">Note</span>LLM Prompt 2: Low-level Embedded C
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
 <div id="callout-7" class="callout-7-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<pre><code>code</code></pre>
+<p>“Write me a C function to carry out a SPI transaction to retrieve a temperature reading from a DS1722 sensor. Make use of CMSIS libraries for the STM32L432KC.”</p>
 </div>
 </div>
 </div>
+<p>With this prompt alone, Gemini was able to generate roughly the right steps and structure. However, this can actually make it harder to debug, as certain things may look right but are actually configured wrong or a variable could hold an incorrect value.</p>
+<p>This first generated code wasn’t able to run due to may different errors. Examples include the incorrect configuration of the MCU STM32’s SPI such that it was incompatible with the DS1722 temperature sensor, pin numbers that do not have SPI as their alternate functions, and more.</p>
+<p>I attempted to catch and respond with these errors, but next time I should also upload the relevant datasheets and see how the LLM does without additional prompting. The final output code can be found below.</p>
 <div class="callout callout-style-default callout-note callout-titled" title="LLM Output">
 <div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-8-contents" aria-controls="callout-8" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
@@ -382,7 +386,125 @@ Figure&nbsp;3: Read Decimal Transaction
 </div>
 <div id="callout-8" class="callout-8-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<pre><code>code</code></pre>
+<pre><code>#include "stm32l4xx_ll_bus.h"
+#include "stm32l4xx_ll_gpio.h"
+#include "stm32l4xx_ll_spi.h"
+
+// Hardware Pin Definitions for GPIOB
+#define DS1722_CS_PORT          GPIOB
+#define DS1722_CS_PIN           LL_GPIO_PIN_0
+
+#define DS1722_SPI_PORT         GPIOB
+#define DS1722_SCK_PIN          LL_GPIO_PIN_3
+#define DS1722_MISO_PIN         LL_GPIO_PIN_4
+#define DS1722_MOSI_PIN         LL_GPIO_PIN_5
+
+// Software CS Control (DS1722 requires Active-HIGH)
+#define DS1722_CS_HIGH()        LL_GPIO_SetOutputPin(DS1722_CS_PORT, DS1722_CS_PIN)
+#define DS1722_CS_LOW()         LL_GPIO_ResetOutputPin(DS1722_CS_PORT, DS1722_CS_PIN)
+
+// DS1722 Memory Addresses
+#define DS1722_READ_INT_ADDR    0x01  // Integer byte address
+#define DS1722_READ_DEC_ADDR    0x02  // Fractional byte address
+
+/**
+* @brief  Transceives a single 8-bit byte over SPI1.
+* @param  txData Byte to transmit
+* @retval Received byte
+*/
+static uint8_t SPI1_TransceiveByte(uint8_t txData)
+{
+    while (!LL_SPI_IsActiveFlag_TXE(SPI1));
+    LL_SPI_TransmitData8(SPI1, txData);
+
+    while (!LL_SPI_IsActiveFlag_RXNE(SPI1));
+    return LL_SPI_ReceiveData8(SPI1);
+}
+
+/**
+* @brief  Reads a register value from the DS1722 over SPI.
+* @param  regAddr Target register memory address
+* @retval Byte read from device
+*/
+static uint8_t DS1722_ReadRegister(uint8_t regAddr)
+{
+    uint8_t rxData = 0;
+
+    // 1. Assert CS HIGH (Active-HIGH for DS1722)
+    DS1722_CS_HIGH();
+
+    // 2. Write address to read
+    SPI1_TransceiveByte(regAddr);
+
+    // 3. Write dummy byte (0x00) to clock out register data
+    rxData = SPI1_TransceiveByte(0x00);
+
+    // 4. De-assert CS LOW
+    DS1722_CS_LOW();
+
+    return rxData;
+}
+
+/**
+* @brief  Retrieves temperature reading from DS1722 in °C.
+* @retval Temperature in Degrees Celsius
+*/
+float DS1722_ReadTemperature(void)
+{
+    int8_t temp_int = (int8_t)DS1722_ReadRegister(DS1722_READ_INT_ADDR);
+    uint8_t temp_dec = DS1722_ReadRegister(DS1722_READ_DEC_ADDR);
+
+    // LSB represents 1/256th °C step (0.00390625)
+    float temp_fraction = (float)temp_dec / 256.0f;
+
+    if (temp_int &lt; 0) {
+        return (float)temp_int - temp_fraction;
+    } else {
+        return (float)temp_int + temp_fraction;
+    }
+}</code></pre>
+<pre><code>  void DS1722_SPI1_Init(void)
+  {
+    // 1. Enable Clocks for GPIOB and SPI1
+    LL_AHB2_GRP1_EnableClock(LL_AHB2_GRP1_PERIPH_GPIOB);
+    LL_APB2_GRP1_EnableClock(LL_APB2_GRP1_PERIPH_SPI1);
+
+    // 2. Configure PB0 as CS Output (Active-HIGH)
+    LL_GPIO_SetPinMode(GPIOB, LL_GPIO_PIN_0, LL_GPIO_MODE_OUTPUT);
+    LL_GPIO_SetPinOutputType(GPIOB, LL_GPIO_PIN_0, LL_GPIO_OUTPUT_PUSHPULL);
+    LL_GPIO_SetPinSpeed(GPIOB, LL_GPIO_PIN_0, LL_GPIO_SPEED_FREQ_HIGH);
+    LL_GPIO_ResetOutputPin(GPIOB, LL_GPIO_PIN_0); // Default CS LOW (Idle)
+
+    // 3. Configure PB3 (SCK), PB4 (MISO), PB5 (MOSI) as Alternate Function AF5
+    LL_GPIO_SetPinMode(GPIOB, LL_GPIO_PIN_3, LL_GPIO_MODE_ALTERNATE);
+    LL_GPIO_SetAFPin_0_7(GPIOB, LL_GPIO_PIN_3, LL_GPIO_AF_5);
+    LL_GPIO_SetPinSpeed(GPIOB, LL_GPIO_PIN_3, LL_GPIO_SPEED_FREQ_HIGH);
+
+    LL_GPIO_SetPinMode(GPIOB, LL_GPIO_PIN_4, LL_GPIO_MODE_ALTERNATE);
+    LL_GPIO_SetAFPin_0_7(GPIOB, LL_GPIO_PIN_4, LL_GPIO_AF_5);
+    LL_GPIO_SetPinSpeed(GPIOB, LL_GPIO_PIN_4, LL_GPIO_SPEED_FREQ_HIGH);
+
+    LL_GPIO_SetPinMode(GPIOB, LL_GPIO_PIN_5, LL_GPIO_MODE_ALTERNATE);
+    LL_GPIO_SetAFPin_0_7(GPIOB, LL_GPIO_PIN_5, LL_GPIO_AF_5);
+    LL_GPIO_SetPinSpeed(GPIOB, LL_GPIO_PIN_5, LL_GPIO_SPEED_FREQ_HIGH);
+
+    // 4. Configure SPI1 Peripheral Settings
+    // Prescaler DIV64 yields 1.25 MHz from an 80 MHz APB2 clock source
+    LL_SPI_SetBaudRatePrescaler(SPI1, LL_SPI_BAUDRATEPRESCALER_DIV64);
+    LL_SPI_SetClockPolarity(SPI1, LL_SPI_POLARITY_LOW);   // CPOL = 0
+    LL_SPI_SetClockPhase(SPI1, LL_SPI_PHASE_2EDGE);        // CPHA = 1
+    LL_SPI_SetTransferDirection(SPI1, LL_SPI_FULL_DUPLEX);
+    LL_SPI_SetDataWidth(SPI1, LL_SPI_DATAWIDTH_8BIT);
+    LL_SPI_SetNSSMode(SPI1, LL_SPI_NSS_SOFT);              // Software CS Control
+    LL_SPI_SetMode(SPI1, LL_SPI_MODE_MASTER);
+    LL_SPI_SetTransferBitOrder(SPI1, LL_SPI_MSB_FIRST);
+
+    // 5. STM32L4 FIFO Threshold (Required for correct 8-bit SPI transfers)
+    LL_SPI_SetRxFIFOThreshold(SPI1, LL_SPI_RX_FIFO_TH_QUARTER);
+
+    // 6. Enable SPI1
+    LL_SPI_Enable(SPI1);
+  }</code></pre>
 </div>
 </div>
 </div>
