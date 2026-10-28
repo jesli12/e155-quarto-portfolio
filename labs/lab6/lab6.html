@@ -215,7 +215,7 @@ ul.task-list li input[type="checkbox"] {
 </div>
 </div>
 <p>The baud rate for USART between the MCU and Wifi module was set at 1.25 MHz, so the SPI baud rate was also configured to be set to 1.25 MHz. Clock phase was set to 1 to match the temperature sensor, and polarity was set to 0.</p>
-<p>For SPI communication with the temperature sensor, a write transaction must occur first to communicate the address of the register being accessed. For the configuration write transaction, the MCU first sends the address of the configuration register address to the temperature sensor module (MISO), and then sends the configuration that is to be written into the register (MISO). For a read transaction, the MCU first sends the address of the measurement register address (either the decimal register or the integers register) (MISO) and then in the next 8-bit frame the temperature sensor responds with the data stored there (MOSI). To read the whole temperature measurement, I need to read twice: one read for integers, and another for decimals. These combined give the temperature measurement output displayed on the webpage. This communication can be seen in the oscilloscope traces below (<a href="#fig-write" class="quarto-xref">Figure&nbsp;1</a>, <a href="#fig-IntRead" class="quarto-xref">Figure&nbsp;2</a>, <a href="#fig-DecRead" class="quarto-xref">Figure&nbsp;3</a>).</p>
+<p>For SPI communication with the temperature sensor, a write transaction must occur first to communicate the address of the register being accessed. For the configuration write transaction, the MCU first sends the address of the configuration register address to the temperature sensor module (MISO), and then sends the configuration that is to be written into the register (MISO). For a read transaction, the MCU first sends the address of the measurement register address (either the decimal register or the integers register) (MISO) and then in the next 8-bit frame the temperature sensor responds with the data stored there (MOSI). To read the whole temperature measurement, I need to read twice: one read for integers, and another for decimals. These combined give the temperature measurement output displayed on the webpage. This communication can be seen in the oscilloscope traces below (<strong>?@fig-write</strong>, <a href="#fig-IntRead" class="quarto-xref">Figure&nbsp;1</a>, <a href="#fig-DecRead" class="quarto-xref">Figure&nbsp;2</a>).</p>
 </section>
 <section id="technical-documentation" class="level2">
 <h2 class="anchored" data-anchor-id="technical-documentation">Technical Documentation:</h2>
@@ -257,16 +257,7 @@ ul.task-list li input[type="checkbox"] {
 </div>
 <div id="callout-3" class="callout-3-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<div id="fig-write" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-write-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="lab6_images/lab6write.png" class="img-fluid figure-img">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-write-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;1: Write Transaction
-</figcaption>
-</figure>
-</div>
+<p><img src="lab6_images/lab6write.png" id="fig-write" class="img-fluid" alt="Write Transaction"> Note this configuration 0xE2 is for a 9-bit resolution.</p>
 </div>
 </div>
 </div>
@@ -288,7 +279,7 @@ Figure&nbsp;1: Write Transaction
 <img src="lab6_images/lab6intread.png" class="img-fluid figure-img">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-IntRead-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;2: Read Integer Transation
+Figure&nbsp;1: Read Integer Transation
 </figcaption>
 </figure>
 </div>
@@ -298,7 +289,7 @@ Figure&nbsp;2: Read Integer Transation
 <img src="lab6_images/lab6deciread.png" class="img-fluid figure-img">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-DecRead-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;3: Read Decimal Transaction
+Figure&nbsp;2: Read Decimal Transaction
 </figcaption>
 </figure>
 </div>
