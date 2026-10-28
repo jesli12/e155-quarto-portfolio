@@ -66,6 +66,8 @@ The following traces show a write transation to configure the temperature sensor
 ::: {.callout-note collapse="true"}
 ## SPI Write to Configuration
 ![Write Transaction](lab6_images/lab6write.png){#fig-write}
+
+Note this configuration 0xE2 is for a 9-bit resolution.
 :::
 
 ::: {.callout-note collapse="true"}
