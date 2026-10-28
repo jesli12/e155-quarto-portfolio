@@ -61,7 +61,7 @@ Note: The ESP8266 wifi module was connected directly to the base developmenet PC
 
 The oscilloscope traces below verify the serial communcation protocols between the MCU and the temperature sensor module. Note that a logic analyzer was unavailable to me at the time, so oscilloscope traces were used in replacement.
 
-The following traces show a write transation to configure the temperature sensor, and a read temperature transaction. The data signals probed are: CS, SCK, MISO, MOSI. Note that clock phase was set to 1 and clock polarity was set to 0.
+The following traces show a write transation to configure the temperature sensor, and a read temperature transaction. The data signals probed are: CS, SCK, MISO, MOSI. Note that clock phase was set to 1 and clock polarity was set to 0. The temperature sensor can support up to 5 MHz frequency SCK.
 
 ::: {.callout-note collapse="true"}
 ## SPI Write to Configuration
