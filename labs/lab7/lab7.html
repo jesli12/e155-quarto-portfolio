@@ -8,7 +8,7 @@
 
 <meta name="description" content="Lab 7 Report for E155">
 
-<title>Lab 7 Report – E155 Portfolio</title>
+<title>Lab 7: The Advanced Encryption Standard (FPGA &amp; MCU) – E155 Portfolio</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -120,15 +120,32 @@ ul.task-list li input[type="checkbox"] {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
+  <li><a href="#design-and-implementation-methodology" id="toc-design-and-implementation-methodology" class="nav-link" data-scroll-target="#design-and-implementation-methodology">Design and Implementation Methodology</a></li>
+  <li><a href="#technical-documentation" id="toc-technical-documentation" class="nav-link" data-scroll-target="#technical-documentation">Technical Documentation</a>
+  <ul class="collapse">
+  <li><a href="#block-diagram" id="toc-block-diagram" class="nav-link" data-scroll-target="#block-diagram">Block Diagram</a></li>
+  </ul></li>
+  <li><a href="#result-and-discussion" id="toc-result-and-discussion" class="nav-link" data-scroll-target="#result-and-discussion">Result and Discussion</a>
+  <ul class="collapse">
+  <li><a href="#testbench-simulation" id="toc-testbench-simulation" class="nav-link" data-scroll-target="#testbench-simulation">Testbench Simulation</a></li>
+  </ul></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
+  <li><a href="#ai-prototype-summary" id="toc-ai-prototype-summary" class="nav-link" data-scroll-target="#ai-prototype-summary">AI Prototype Summary</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Lab 7 Report</h1>
+<h1 class="title">Lab 7: The Advanced Encryption Standard (FPGA &amp; MCU)</h1>
   <div class="quarto-categories">
     <div class="quarto-category">reflection</div>
     <div class="quarto-category">labreport</div>
@@ -154,8 +171,252 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
+<section id="introduction" class="level2">
+<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
+<p>In this project, I construct a hardware accelerator on the FPGA to perform 128-bit AES encryption. A microprocessor sends a plaintext message and key to the FPGA for it to encode, and the cyphertext output has been verified for correctness.</p>
+<p>In summary, I…</p>
+<ul>
+<li><p>Learned to read and implement a complex specification (AES encryption)</p></li>
+<li><p>Built a nontrivial system on an FPGA that requires thoughtful architecture to fit on the chip</p></li>
+<li><p>Implemented an SPI interface to communicate between the FPGA and microprocessor</p></li>
+</ul>
+</section>
+<section id="design-and-implementation-methodology" class="level2">
+<h2 class="anchored" data-anchor-id="design-and-implementation-methodology">Design and Implementation Methodology</h2>
+<p>In order for the design to fit onto the FPGA, the design reused hardware using a controller and datapath structure. The 128-bit AES encryption logic is too large to implement all computation rounds as a single large block of combinational logic. Therefore, computations were performed sequentially in rounds that reused hardware.</p>
+<p>The datapath contained the following logic blocks to be reused in round computations:</p>
+<ol type="1">
+<li>SubBytes</li>
+<li>ShiftRows</li>
+<li>MixColumns</li>
+<li>KeyExpansion</li>
+<li>AddRoundKey</li>
+</ol>
+<p>The datapath is illustrated in the core block diagram in <a href="#fig-aes_block" class="quarto-xref">Figure&nbsp;2</a>.</p>
+<p>The finite state machine that controls the datapath per round of computations is shown in <a href="#fig-fsm" class="quarto-xref">Figure&nbsp;1</a>.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>AES Finite State Machine
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div id="fig-fsm" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fsm-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="lab7_images/aes_core_fsm.jpg" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fsm-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1: AES Finite State Machine
+</figcaption>
+</figure>
+</div>
+<p>Each state controls signals in the datapath such that only the operations needed in the round are connected and used.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="technical-documentation" class="level2">
+<h2 class="anchored" data-anchor-id="technical-documentation">Technical Documentation</h2>
+<p>The source code for the project can be found in the associated <a href="https://github.com/jesli12/e155-lab7">Github repository</a>.</p>
+<section id="block-diagram" class="level3">
+<h3 class="anchored" data-anchor-id="block-diagram">Block Diagram</h3>
+<p>The block diagram in <a href="#fig-aes_block" class="quarto-xref">Figure&nbsp;2</a> shows the overall architecture of the AES FPGA design.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>FPGA AES Design Block Diagram
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-2" class="callout-2-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div id="fig-aes_block" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-aes_block-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="lab7_images/aes_core_block_diagram.jpg" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-aes_block-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2: Block Diagram of the overall AES FPGA design
+</figcaption>
+</figure>
+</div>
+<p>FSM logic was described in the previous section.</p>
+</div>
+</div>
+</div>
+<p>The block diagram in <a href="#fig-top_block" class="quarto-xref">Figure&nbsp;3</a> shows the architecture of the top level, including the SPI interface module.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Top Level Block Diagram
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-3" class="callout-3-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div id="fig-top_block" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-top_block-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="lab7_images/top_block_diagram.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-top_block-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3: Top level Block Diagram
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="result-and-discussion" class="level2">
+<h2 class="anchored" data-anchor-id="result-and-discussion">Result and Discussion</h2>
+<section id="testbench-simulation" class="level3">
+<h3 class="anchored" data-anchor-id="testbench-simulation">Testbench Simulation</h3>
+<p>The design does successfully passes the aes_core module testbench (<code>aes_core_tb</code>) and the full FPGA system testbench (<code>aes_spi_tb</code>) that includes the SPI interface.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>aes_core_tb
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-4" class="callout-4-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div id="fig-waveform" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-waveform-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="lab7_images/aes_core.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-waveform-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4: Waveform
+</figcaption>
+</figure>
+</div>
+<p>The final output of <code>cyphertext</code> matches the <code>expected</code> value, thus this test passes successfully!</p>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>aes_spi_tb
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-5" class="callout-5-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div id="fig-waveform_spi" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-waveform_spi-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="lab7_images/aes_spi.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-waveform_spi-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;5: Waveform
+</figcaption>
+</figure>
+</div>
+<p>The final output of <code>cyphertext matches</code> the <code>expected</code> value, thus this test passes successfully!</p>
+</div>
+</div>
+</div>
+<p>All testbenches pass successfully, DUT behaves as expected.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Radiant Synthesis Resource Report
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-6" class="callout-6-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div id="fig-resource" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-resource-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="lab7_images/resource.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-resource-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;6: Waveform
+</figcaption>
+</figure>
+</div>
+<p>Radiant’s report on resource usage of my implementation, showing that the design fits on the FPGA.</p>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="conclusion" class="level2">
+<h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>
+<p>The design was able to successfully produce 128-bit cypertexts from the plaintext and key inputs, and met lab proficiency specifications.</p>
+<p>While I was able to demonstrate correct behavior in test simulations, I was unable to get the design to work on hardware (uploaded to the FPGA and MCU). Given more time, I would debug the issues in hardware such that it did work. It would’ve also been interesting to implement a inverse cipher to reverse encryption as well. I could’ve also been more efficient with hardware usage in multiple areas, most pointedly in my 16 sbox instantiations for subbytes, which could be reduced using sequential logic to allow for the reuse of that hardware at the cost of more computation time.</p>
+<p>I spent roughly 25 hours in total on this lab.</p>
+</section>
+<section id="ai-prototype-summary" class="level2">
+<h2 class="anchored" data-anchor-id="ai-prototype-summary">AI Prototype Summary</h2>
+<p>Does withholding a specification from Gemini AI Pro, which simulates withholding confidential information, change the quality of the HDL the LLM generates?</p>
+<p>To explore the capability and usage of AI for generating HDL, the following prompts were entered into Gemini AI Pro after the project was completed:</p>
+<div class="callout callout-style-default callout-note callout-titled" title="LLM Prompt 1: Attached AES Standards PDF">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>LLM Prompt 1: Attached AES Standards PDF
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-7" class="callout-7-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>“Write SystemVerilog HDL to implement the KeyExpansion logic described in the FIPS-197 uploaded document. The module should be purely combinational, using the previous key and current round number to calculate the next key. Assume other required modules (SubWord and RotWord) are already implemented.”</p>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled" title="LLM Prompt 2: Avoid Existing Knowledge of AES">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-8-contents" aria-controls="callout-8" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>LLM Prompt 2: Avoid Existing Knowledge of AES
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-8" class="callout-8-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>“Write SystemVerilog HDL to implement the following logic:</p>
+<p><code>i = 0 while i &lt; Nk do     w[i] &lt;- key[4*i..4*i+3]     i &lt;- i+1 end while while i &lt;= 4 * Nr + 3 do     temp &lt;- w[i-1]     if i mod Nk = 0 then         temp &lt;- module1(module2(temp)) (+) Rcon[i/Nk]     else if Nk &gt; 6 and i mod Nk = 4 then         temp &lt;- module1(temp)     end if     w[i] &lt;- w[i-Nk] (+) temp     i &lt;- i + 1 end while return w</code></p>
+<p>Assume module1 and module2 are existing modules that can be instantiated. (+) refers to XOR. Unwrap the loop in the provided pseudo code so it uses the previous iterations output to generate the new iteration.</p>
+<p>Do not use any existing knowledge of the AES specifications in your answer.”</p>
+</div>
+</div>
+</div>
+<p>For the first prompt, Gemini was able to generate cleanly organized and well commented HDL that had some resemblance to the structure I implemented. However, my code processes all 128 bits (4 words) at once, but Gemini’s generated keyexpansion module takes and processes 32 bit words at a time. These two modules can essentially be equivalent with some added control logic with Gemini’s module to support the full 128 bits. Of course, it is important to have sbox_sync in order to reuse the sbox hardware sequentially, since a purely combinational sbox is quite hardware intensive due to the necessary look-up tables (LUTs) per instantiation.</p>
+<p>As for the second prompt, it was interesting that the Gemini output code was substantially harder to read, especially as it generated code using for loops (<code>gen_var</code> syntax), which is something I haven’t seen very often before. The code structure has lost the clean and intuitive structure that prompt 1 had generated.</p>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
