@@ -242,7 +242,7 @@ Figure&nbsp;1: AES Finite State Machine
 <div id="fig-aes_block" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-aes_block-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="lab7_images/aes_core_block_diagram.jpg" class="img-fluid figure-img">
+<img src="lab7_images/aes_core_block_diagram_new.jpeg" class="img-fluid figure-img">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-aes_block-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;2: Block Diagram of the overall AES FPGA design
@@ -334,7 +334,7 @@ Figure&nbsp;5: Waveform
 </figcaption>
 </figure>
 </div>
-<p>The final output of <code>cyphertext matches</code> the <code>expected</code> value, thus this test passes successfully!</p>
+<p>The final output of <code>cyphertext</code> matches the <code>expected</code> value, thus this test passes successfully!</p>
 </div>
 </div>
 </div>
@@ -370,7 +370,7 @@ Figure&nbsp;6: Waveform
 <section id="conclusion" class="level2">
 <h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>
 <p>The design was able to successfully produce 128-bit cypertexts from the plaintext and key inputs, and met lab proficiency specifications.</p>
-<p>While I was able to demonstrate correct behavior in test simulations, I was unable to get the design to work on hardware (uploaded to the FPGA and MCU). Given more time, I would debug the issues in hardware such that it did work. It would’ve also been interesting to implement a inverse cipher to reverse encryption as well. I could’ve also been more efficient with hardware usage in multiple areas, most pointedly in my 16 sbox instantiations for subbytes, which could be reduced using sequential logic to allow for the reuse of that hardware at the cost of more computation time.</p>
+<p>While I was able to demonstrate correct behavior in test simulations, I was unable to get the design to work on hardware (uploaded to the FPGA and MCU). Given more time, I would debug the issues in hardware such that it did work. It would also be important to separate the FSM controller logic in aes_core to actually be its own module, and have the datapath in a separate module as well for easier unit testing. It would’ve also been interesting to implement a inverse cipher to reverse encryption as well. I could’ve also been more efficient with hardware usage in multiple areas, most pointedly in my 16 sbox instantiations for subbytes, which could be reduced using sequential logic to allow for the reuse of that hardware at the cost of more computation time.</p>
 <p>I spent roughly 25 hours in total on this lab.</p>
 </section>
 <section id="ai-prototype-summary" class="level2">
@@ -406,7 +406,30 @@ Figure&nbsp;6: Waveform
 <div id="callout-8" class="callout-8-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p>“Write SystemVerilog HDL to implement the following logic:</p>
-<p><code>i = 0 while i &lt; Nk do     w[i] &lt;- key[4*i..4*i+3]     i &lt;- i+1 end while while i &lt;= 4 * Nr + 3 do     temp &lt;- w[i-1]     if i mod Nk = 0 then         temp &lt;- module1(module2(temp)) (+) Rcon[i/Nk]     else if Nk &gt; 6 and i mod Nk = 4 then         temp &lt;- module1(temp)     end if     w[i] &lt;- w[i-Nk] (+) temp     i &lt;- i + 1 end while return w</code></p>
+<p>```i = 0</p>
+<p>while i &lt; Nk do</p>
+<pre><code>w[i] &lt;- key[4*i..4*i+3]
+
+i &lt;- i+1</code></pre>
+<p>end while</p>
+<p>while i &lt;= 4 * Nr + 3 do</p>
+<pre><code>temp &lt;- w[i-1]
+
+if i mod Nk = 0 then
+
+    temp &lt;- module1(module2(temp)) (+) Rcon[i/Nk]
+
+else if Nk &gt; 6 and i mod Nk = 4 then
+
+    temp &lt;- module1(temp)
+
+end if
+
+w[i] &lt;- w[i-Nk] (+) temp
+
+i &lt;- i + 1</code></pre>
+<p>end while</p>
+<p>return w```</p>
 <p>Assume module1 and module2 are existing modules that can be instantiated. (+) refers to XOR. Unwrap the loop in the provided pseudo code so it uses the previous iterations output to generate the new iteration.</p>
 <p>Do not use any existing knowledge of the AES specifications in your answer.”</p>
 </div>
