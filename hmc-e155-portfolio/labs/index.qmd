@@ -13,6 +13,6 @@ title: "Labs"
 
 ## [Lab 6: The Internet of Things and Serial Peripheral Interface (SPI)](lab6/lab6.qmd)
 
-## [Lab 7: The Advanced Encryption Standard (Upcoming)](lab7/lab7.qmd)
+## [Lab 7: The Advanced Encryption Standard](lab7/lab7.qmd)
 
 ## Final Project! (Upcoming) 
